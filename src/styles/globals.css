@@ -1,0 +1,437 @@
+@import "tailwindcss";
+
+/*
+ * Espressly design tokens.
+ *
+ * The palette is built from the brand's own logo: a deep espresso brown, a copper
+ * accent lifted from the cup mark, and a warm parchment. Surfaces are almost
+ * entirely dark, with cream used for the counterpoint sections so the site reads
+ * as one material rather than two themes.
+ */
+
+:root {
+  /* --- surface --- */
+  --background: #14100d;
+  --background-raised: #1b1611;
+  --background-sunken: #0d0a08;
+  --surface-parchment: #f2ece1;
+  --surface-parchment-raised: #faf6ee;
+  --surface-caramel: #2a211a;
+
+  /* --- ink --- */
+  --foreground: #f0e9dd;
+  --foreground-soft: #cbbfae;
+  --muted-foreground: #9c8d7c;
+  --ink-espresso: #241a12;
+  --ink-espresso-soft: #4c3b2c;
+
+  /* --- coffee tones --- */
+  --coffee-espresso: #241a12;
+  --coffee-mocha: #3a2a1e;
+  --coffee-roast: #523a26;
+  --coffee-caramel: #8a6134;
+
+  /* --- cream tones --- */
+  --cream-parchment: #f2ece1;
+  --cream-oat: #e2d6c2;
+  --cream-latte: #cbb79a;
+
+  /* --- accent --- */
+  --accent: #b8763a;
+  --accent-bright: #d9994f;
+  --accent-deep: #7d4d21;
+  --accent-foreground: #17110b;
+  --accent-soft: rgba(184, 118, 58, 0.16);
+
+  /* Status */
+  --destructive: #c96a4a;
+  --success: #6f8f5c;
+
+  /* --- structure --- */
+  --border: rgba(240, 233, 221, 0.12);
+  --border-strong: rgba(240, 233, 221, 0.24);
+  --border-dark: rgba(36, 26, 18, 0.16);
+  --border-dark-strong: rgba(36, 26, 18, 0.32);
+
+  /* --- motion --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 220ms;
+  --duration-base: 420ms;
+  --duration-slow: 780ms;
+
+  /* --- rhythm --- */
+  --nav-height: 76px;
+  --nav-height-mobile: 64px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-raised: var(--background-raised);
+  --color-background-sunken: var(--background-sunken);
+  --color-surface-parchment: var(--surface-parchment);
+  --color-surface-parchment-raised: var(--surface-parchment-raised);
+  --color-surface-caramel: var(--surface-caramel);
+
+  --color-foreground: var(--foreground);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-ink-espresso: var(--ink-espresso);
+  --color-ink-espresso-soft: var(--ink-espresso-soft);
+
+  --color-coffee-espresso: var(--coffee-espresso);
+  --color-coffee-mocha: var(--coffee-mocha);
+  --color-coffee-roast: var(--coffee-roast);
+  --color-coffee-caramel: var(--coffee-caramel);
+
+  --color-cream-parchment: var(--cream-parchment);
+  --color-cream-oat: var(--cream-oat);
+  --color-cream-latte: var(--cream-latte);
+
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-dark: var(--border-dark);
+  --color-border-dark-strong: var(--border-dark-strong);
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+
+  --ease-expo: var(--ease-out-expo);
+  --ease-quart: var(--ease-out-quart);
+
+  --spacing-nav: var(--nav-height);
+
+  --shadow-lift: 0 24px 60px -30px rgba(0, 0, 0, 0.85);
+  --shadow-panel: 0 40px 90px -50px rgba(0, 0, 0, 0.95);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Lenis drives scrolling; the native smooth fallback would fight it. */
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-bright);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Reduced motion: collapse every animated surface to its resting state. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Editorial eyebrow: small, wide-tracked, used above every section heading. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+  }
+
+  .eyebrow-dark {
+    color: var(--accent-deep);
+  }
+
+  /* Micro metadata: coordinates, times, counts. Reads as instrument labelling. */
+  .micro {
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The hairline that separates most sections. */
+  .rule {
+    height: 1px;
+    background-color: var(--border);
+  }
+
+  .rule-dark {
+    height: 1px;
+    background-color: var(--border-dark);
+  }
+
+  /* Glass is an accent used only for navigation and floating controls. */
+  .glass-dark {
+    background-color: rgba(16, 12, 9, 0.72);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Fine film grain. Keeps large flat fields from banding. */
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Architectural micro-grid, used behind select sections. */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 96px 96px;
+  }
+
+  .grid-lines-dark {
+    background-image:
+      linear-gradient(to right, var(--border-dark) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border-dark) 1px, transparent 1px);
+    background-size: 96px 96px;
+  }
+
+  /* --- motion vocabulary -------------------------------------------------
+     Reveals only animate opacity and transform, and only when the observer has
+     marked the element as pending. Without JavaScript nothing is hidden. */
+  .reveal-pending[data-reveal="fade-up"] {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+
+  .reveal-pending[data-reveal="fade"] {
+    opacity: 0;
+  }
+
+  .reveal-pending[data-reveal="slide-left"] {
+    opacity: 0;
+    transform: translate3d(-32px, 0, 0);
+  }
+
+  .reveal-pending[data-reveal="scale"] {
+    opacity: 0;
+    transform: scale3d(0.965, 0.965, 1);
+  }
+
+  .reveal-pending[data-reveal="clip"] {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  [data-reveal] {
+    transition:
+      opacity var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
+        var(--ease-out-expo),
+      transform var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
+        var(--ease-out-expo),
+      clip-path var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
+        var(--ease-out-expo);
+  }
+
+  [data-reveal].is-revealed[data-reveal="fade-up"],
+  [data-reveal].is-revealed[data-reveal="fade"],
+  [data-reveal].is-revealed[data-reveal="slide-left"],
+  [data-reveal].is-revealed[data-reveal="scale"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal].is-revealed[data-reveal="clip"] {
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* Text reveal: each line is masked and slides up from behind its own edge. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .line-mask > span {
+    display: block;
+    transform: translate3d(0, 105%, 0);
+    transition: transform 1.05s var(--ease-out-expo);
+    transition-delay: var(--line-delay, 0s);
+  }
+
+  .line-mask.is-revealed > span {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Thin animated rule used to mark section positions. */
+  .hairline-draw {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1.2s var(--ease-out-expo);
+    transition-delay: var(--line-delay, 0s);
+  }
+
+  .hairline-draw.is-revealed {
+    transform: scaleX(1);
+  }
+
+  /* Underline sweep for editorial links inside body copy. */
+  .link-sweep {
+    position: relative;
+    color: inherit;
+  }
+
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.45s var(--ease-out-expo);
+  }
+
+  .link-sweep:hover::after,
+  .link-sweep:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+@layer utilities {
+  /* Masks the edge of a scrolling row so items fade rather than cut off. */
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6rem,
+      #000 calc(100% - 6rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6rem,
+      #000 calc(100% - 6rem),
+      transparent
+    );
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Optical tightening for very large display type. */
+  .tracking-display {
+    letter-spacing: -0.028em;
+  }
+}
+
+/* View transitions: page-level crossfade. Navigation uses React's
+   ViewTransition wrapper with a directional type so the exit/enter pair is
+   distinguishable from same-route content changes. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page-exit) {
+  animation: 140ms var(--ease-out-quart) both fade-out;
+}
+
+::view-transition-new(.page-enter) {
+  animation: 380ms var(--ease-out-expo) 60ms both fade-rise;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Scroll indicator: a copper segment travelling down a hairline. */
+@keyframes hero-scroll {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
