@@ -273,10 +273,10 @@ export function ContactFaq() {
           <div className="relative aspect-16/9 w-full overflow-hidden border border-border lg:aspect-32/9">
             <Image
               src="/images/space-counter.jpg"
-              alt="A warmly lit cafe counter lined with bottles and pendant lights."
+              alt="A barista working behind a white brick counter lined with shelves and stock."
               fill
               loading="lazy"
-              sizes="100vw"
+              sizes="(max-width: 1024px) 100vw, 1680px"
               className="object-cover"
             />
             <div

@@ -94,7 +94,7 @@ export function VisitEspressly() {
           <div className="lg:col-span-7">
             <RevealImage
               src="/images/space-facade.jpg"
-              alt="An Espressly storefront terrace with a chalkboard menu on the pavement."
+              alt="A cafe interior with black menu boards above the counter and people at the till."
               width={1800}
               height={1400}
               sizes="(max-width: 1024px) 100vw, 55vw"

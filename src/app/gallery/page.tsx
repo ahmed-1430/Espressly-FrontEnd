@@ -25,7 +25,7 @@ export default function GalleryPage() {
         title="Gallery"
         lede="The room, the bar, the roast, and the people who work them. Shot on a Tuesday, mostly, because that is when the light is best and nobody is performing."
         image="/images/space-garden.jpg"
-        imageAlt="A cafe interior filled with hanging plants beneath a glass roof."
+        imageAlt="A cafe interior filled with hanging plants beneath a glazed roof."
         meta={[
           { label: "Frames", value: String(galleryFrames.length).padStart(2, "0") },
           { label: "Period", value: "2019 — 2026" },

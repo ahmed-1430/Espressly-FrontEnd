@@ -69,15 +69,16 @@ const MANIFEST = {
   // --- craft ---
   "craft-machine": { id: "1461988091159-192b6df7054f", width: 1600 },
   "craft-pour": { id: "1541167760496-1628856ab772", width: 1200 },
-  "craft-grinder": { id: "1611854779393-1b2da9d400fe", width: 1400 },
   "craft-beans": { id: "1610632380989-680fe40816c6", width: 1600 },
   "craft-origin": { id: "1493925410384-84f842e616fb", width: 1200 },
 
   // --- product & retail ---
-  "product-bag": { id: "1559056199-641a0ac8b55e", width: 1400 },
+  // Frames showing a third party's printed branding — a roaster's name on a bag, a
+  // logo on a takeaway cup — are deliberately absent from this manifest. They
+  // cannot ship on a site for a different brand, and cropping around a label is
+  // not a fix.
   "product-beans": { id: "1442550528053-c431ecb55509", width: 1400 },
   "product-scoop": { id: "1416879595882-3373a0480b5b", width: 1400 },
-  "product-cup": { id: "1577937927133-66ef06acdf18", width: 1400 },
 
   // --- editorial ---
   "editorial-still": { id: "1504630083234-14187a9df0f5", width: 1800 },

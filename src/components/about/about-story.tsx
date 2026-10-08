@@ -42,10 +42,12 @@ export function AboutStory() {
         <div className="mt-14 lg:mt-20">
           <RevealImage
             src="/images/space-room.jpg"
-            alt="A cafe interior with warm pendant lights, dark timber and a long counter."
+            alt="A cafe interior with a green painted ceiling, long timber tables and stools."
             width={1800}
             height={1000}
-            sizes="100vw"
+            // Full-bleed but inside the 110rem container, so it never needs a
+            // true-viewport-width derivative.
+            sizes="(max-width: 640px) 92vw, (max-width: 1760px) 88vw, 1680px"
             className="aspect-16/9 w-full sm:aspect-21/9"
             parallax={6}
           />
@@ -158,8 +160,8 @@ export function AboutStory() {
                 body: "Four of them, facing out. The best light in the building arrives at about half past ten.",
               },
               {
-                image: "/images/craft-machine.jpg",
-                alt: "The chrome face of a lever espresso machine lit warmly from behind.",
+                image: "/images/space-counter.jpg",
+                alt: "A barista behind the counter, with grinders and an espresso machine along the bar.",
                 title: "The bar",
                 body: "Three groups, a brass counter, and no menu board behind it. Everything is priced on a card you can read standing up.",
               },

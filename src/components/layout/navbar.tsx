@@ -104,9 +104,11 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
               href="/shop"
               className={cn(
                 "group relative hidden overflow-hidden border px-6 py-3 text-[0.6875rem] font-medium uppercase tracking-[0.16em] transition-colors duration-500 sm:inline-flex",
-                solid || onParchment
+                // Over a photograph the border and label need their own backing to
+                // stay legible; over the glass bar the transparent treatment is fine.
+                solid
                   ? "border-border-strong text-foreground hover:border-accent hover:text-accent-bright"
-                  : "border-border-strong/70 text-foreground hover:border-accent hover:text-accent-bright",
+                  : "border-foreground/25 bg-background-sunken/45 text-foreground backdrop-blur-[6px] hover:border-accent hover:text-accent-bright",
               )}
             >
               <span

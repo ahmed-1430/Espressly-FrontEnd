@@ -25,8 +25,8 @@ export default function ShopPage() {
         eyebrow="Beans & Goods"
         title="Shop"
         lede="The same coffee we serve, roasted in the back room twice a week, plus the equipment and objects we actually use ourselves."
-        image="/images/craft-grinder.jpg"
-        imageAlt="A hand grinder and a bag of beans on a wooden bench beside a steel mug."
+        image="/images/craft-machine.jpg"
+        imageAlt="A chrome espresso machine on a brew bar, its buttons catching the light."
         meta={[
           { label: "Products", value: String(products.length).padStart(2, "0") },
           { label: "Roasted", value: "Tue & Fri" },

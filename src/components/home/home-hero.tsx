@@ -88,15 +88,28 @@ export function HomeHero() {
           fill
           priority
           fetchPriority="high"
+          // This one genuinely is full-bleed, so 100vw is correct here. The cap
+          // keeps very wide displays from requesting an unbounded derivative.
           sizes="100vw"
           data-hero-media
-          className="will-change-transform object-cover object-[52%_center]"
+          // Focal point sits right of centre so the cup clears the headline, which
+          // occupies the left half of the frame at every breakpoint.
+          className="will-change-transform object-cover object-[68%_center] sm:object-[60%_center]"
         />
-        {/* Two scrims: a vertical one for text legibility, a warm one for tone. */}
+        {/*
+          Three scrims, each with one job. The vertical one carries text
+          legibility, the top one guarantees the navigation and logo have contrast
+          against whatever the photograph is doing behind them, and the warm radial
+          one keeps the espresso tone rather than washing the image grey.
+        */}
         <div
           data-hero-scrim
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-background-sunken via-background-sunken/35 to-background-sunken/55"
+          className="absolute inset-0 bg-gradient-to-t from-background-sunken via-background-sunken/45 to-background-sunken/70"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-background-sunken/85 to-transparent"
         />
         <div
           aria-hidden
@@ -115,10 +128,10 @@ export function HomeHero() {
             <span className="micro">{location.district}</span>
           </div>
 
-          <h1 className="mt-8 text-[clamp(3.25rem,13.5vw,11rem)] tracking-display">
+          <h1 className="mt-8 text-[clamp(2.75rem,11.5vw,9.5rem)] tracking-display">
             <SplitLines
               as="span"
-              lines={["Specialty", "coffee, crafted", "with intention."]}
+              lines={["Specialty coffee,", "crafted with", "intention."]}
               delay={0.35}
               stagger={0.1}
             />
@@ -162,12 +175,16 @@ export function HomeHero() {
           <p className="micro text-muted-foreground">
             Open today {siteConfig.phoneDisplay}
           </p>
-          <p className="micro hidden text-muted-foreground sm:block">
+          <p className="micro text-muted-foreground sm:hidden">
             {formatCoordinates(location.coordinates.latitude, location.coordinates.longitude)}
           </p>
+          {/*
+            The scroll cue is a pointer affordance. Touch devices get the
+            coordinates instead, which is the detail worth carrying on a phone.
+          */}
           <a
             href="#featured"
-            className="group flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
+            className="group hidden items-center gap-3 text-muted-foreground transition-colors hover:text-foreground sm:flex"
             aria-label="Scroll to featured coffee"
           >
             <span className="micro">Scroll</span>

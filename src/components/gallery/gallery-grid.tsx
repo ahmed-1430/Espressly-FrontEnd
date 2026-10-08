@@ -98,10 +98,13 @@ function GalleryItem({
           alt={frame.alt}
           fill
           loading={index < 2 ? "eager" : "lazy"}
+          // Sizes are capped deliberately: a wide frame inside the 110rem
+          // container is at most ~85vw on a wide display, and asking for 100vw
+          // was requesting a derivative roughly twice the size it needs.
           sizes={
             frame.span === "wide"
-              ? "(max-width: 640px) 100vw, 92vw"
-              : "(max-width: 640px) 100vw, (max-width: 1024px) 48vw, 30vw"
+              ? "(max-width: 640px) 92vw, (max-width: 1024px) 88vw, 60vw"
+              : "(max-width: 640px) 92vw, (max-width: 1024px) 44vw, 30vw"
           }
           className="object-cover transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
         />
@@ -198,6 +201,7 @@ function Lightbox({
             src={frame.src}
             alt={frame.alt}
             fill
+            // Object-contain at full viewport width, so this one does need 100vw.
             sizes="100vw"
             className="animate-[lightbox-in_520ms_var(--ease-out-expo)_both] object-contain px-4 py-6 sm:px-16 sm:py-10"
           />

@@ -25,7 +25,7 @@ export default function AboutPage() {
         title="About Us"
         lede="We are a small coffee house on Queen Street that never quite finished opening. Three years later it is still the same idea: one blend, roasted on site, in a room built for staying."
         image="/images/craft-machine.jpg"
-        imageAlt="The chrome face of a lever espresso machine lit warmly from behind."
+        imageAlt="A chrome espresso machine on a brew bar, its buttons catching the light."
         meta={[
           { label: "Founded", value: String(siteConfig.founded) },
           { label: "Baristas", value: "9" },

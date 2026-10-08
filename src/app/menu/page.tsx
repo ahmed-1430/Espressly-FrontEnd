@@ -29,7 +29,7 @@ export default function MenuPage() {
         title="Our Menu"
         lede="Eight categories, one very short list. Everything below is made on site, and the seasonal board changes when the week does."
         image="/images/bar-pourover.jpg"
-        imageAlt="A glass carafe and cups of filter coffee arranged on a dark round table."
+        imageAlt="Two lattes with rosetta art on a round wooden board, surrounded by dark leaves."
         meta={[
           { label: "Categories", value: String(menuCategories.length).padStart(2, "0") },
           { label: "Items", value: String(menuItems.length).padStart(2, "0") },

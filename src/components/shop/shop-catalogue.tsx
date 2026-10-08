@@ -114,7 +114,7 @@ function ProductCard({
       >
         <Image
           src={product.image}
-          alt={product.name}
+          alt={product.imageAlt}
           fill
           loading={lead ? "eager" : "lazy"}
           sizes={

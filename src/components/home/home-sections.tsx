@@ -136,7 +136,8 @@ export function BrandStory() {
                 src="/images/editorial-still.jpg"
                 alt=""
                 fill
-                sizes="100vw"
+                // Decorative and heavily dimmed, so it never needs full resolution.
+                sizes="(max-width: 1024px) 100vw, 1400px"
                 className="object-cover opacity-[0.13] grayscale"
               />
             </div>
@@ -442,11 +443,37 @@ export function AtmospherePreview() {
  * typographically, which reads as deliberate restraint.
  */
 export function ShopPreview() {
+  // Pulled from the real catalogue so the homepage and the shop page cannot drift
+  // apart. Each product carries its own image rather than repeating one frame.
   const items = [
-    { name: "Signature Blend", detail: "Whole bean · 340 g", price: 22 },
-    { name: "Single Origin", detail: "Whole bean · 250 g", price: 26 },
-    { name: "Cold Brew Bottle", detail: "Ready to drink · 330 ml", price: 7.5 },
-    { name: "Hand Grinder", detail: "48 mm conical burrs", price: 145 },
+    {
+      name: "Signature Blend",
+      detail: "Whole bean · 340 g",
+      price: 22,
+      image: "/images/product-beans.jpg",
+      alt: "A dense macro texture of dark roasted coffee beans.",
+    },
+    {
+      name: "Single Origin",
+      detail: "Whole bean · 250 g",
+      price: 26,
+      image: "/images/craft-origin.jpg",
+      alt: "Two hands cupped around freshly roasted beans.",
+    },
+    {
+      name: "Cold Brew",
+      detail: "Ready to drink · 330 ml",
+      price: 7.5,
+      image: "/images/cold-tonic.jpg",
+      alt: "A tall glass of iced coffee with milk swirling through it.",
+    },
+    {
+      name: "Measuring Scoop",
+      detail: "Anodised aluminium · 18 g",
+      price: 24,
+      image: "/images/product-scoop.jpg",
+      alt: "An anodised scoop of ground coffee beside whole beans.",
+    },
   ] as const;
 
   return (
@@ -498,8 +525,8 @@ export function ShopPreview() {
             <article key={item.name} className="group">
               <div className="relative aspect-4/5 overflow-hidden bg-coffee-mocha">
                 <Image
-                  src="/images/product-beans.jpg"
-                  alt=""
+                  src={item.image}
+                  alt={item.alt}
                   fill
                   sizes="(max-width: 640px) 50vw, 24vw"
                   className="object-cover transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.06]"

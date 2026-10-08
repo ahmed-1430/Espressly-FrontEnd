@@ -75,7 +75,7 @@ export function ShopEnquiry() {
               <div className="relative aspect-4/5 overflow-hidden bg-coffee-mocha">
                 <Image
                   src={lead.image}
-                  alt="Roasted coffee beans filling the frame in a dense macro texture."
+                  alt="A dense macro texture of dark roasted coffee beans filling the frame."
                   fill
                   loading="lazy"
                   sizes="(max-width: 1024px) 100vw, 38vw"

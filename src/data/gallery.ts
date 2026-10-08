@@ -12,6 +12,13 @@ export type GalleryFrame = {
   readonly meta: string;
 };
 
+/**
+ * The gallery set.
+ *
+ * Alt text describes what is actually in each frame. It was written against the
+ * photographs rather than against the captions, which is why some captions name
+ * a moment that the image cannot show.
+ */
 export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "morning-bar",
@@ -40,7 +47,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "machine-detail",
     src: "/images/craft-machine.jpg",
-    alt: "The chrome face of a lever espresso machine lit warmly from behind.",
+    alt: "The chrome face of an espresso machine lit warmly from behind.",
     caption: "Three groups, calibrated every morning at seven.",
     span: "tall",
     meta: "Equipment",
@@ -48,7 +55,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "counter-dark",
     src: "/images/hero-counter.jpg",
-    alt: "An amber-lit bar counter lined with bottles and pendant lights at night.",
+    alt: "A long bar counter lined with bottles and hanging lights, lit in amber.",
     caption: "After eight, the room turns to this.",
     span: "wide",
     meta: "Bar · Evening",
@@ -64,7 +71,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "seating-room",
     src: "/images/space-seating.jpg",
-    alt: "A bright cafe interior with rattan chairs, plants and long shared tables.",
+    alt: "A cafe interior with rattan chairs, plants and tables under a glazed roof.",
     caption: "The long table runs the length of the room.",
     span: "standard",
     meta: "Room · Day",
@@ -88,7 +95,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "bakery-case",
     src: "/images/food-counter.jpg",
-    alt: "A chilled display case of pastries on shelves inside the cafe.",
+    alt: "A chilled display case of pastries arranged on shelves inside the cafe.",
     caption: "Everything in the case is made here.",
     span: "standard",
     meta: "Kitchen",
@@ -96,7 +103,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "garden-room",
     src: "/images/space-garden.jpg",
-    alt: "A cafe interior filled with hanging plants beneath a glass roof.",
+    alt: "A cafe interior filled with hanging plants beneath a glazed roof.",
     caption: "Plants we have outlived. Two, so far.",
     span: "wide",
     meta: "Room · Day",
@@ -104,7 +111,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "cold-brew",
     src: "/images/cold-brew.jpg",
-    alt: "A tall glass of cold brew with ice and a layer of cream through the middle.",
+    alt: "A tall glass of iced coffee with ice and a layer of cream through the middle.",
     caption: "Eighteen hours, no heat at any point.",
     span: "standard",
     meta: "Cold",
@@ -120,7 +127,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "pourover",
     src: "/images/bar-pourover.jpg",
-    alt: "A glass carafe and three cups of filter coffee arranged on a dark round table.",
+    alt: "Two lattes with rosetta art on a round wooden board, surrounded by dark leaves.",
     caption: "Three ways to taste the same coffee.",
     span: "standard",
     meta: "Filter",
@@ -136,7 +143,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "brew-station",
     src: "/images/hero-bar.jpg",
-    alt: "An espresso machine and grinders on a warm wooden brew bar under pendant lights.",
+    alt: "A brew bar of grinders and an espresso machine under warm pendant lights.",
     caption: "Three groups, two grinders, one shot at a time.",
     span: "standard",
     meta: "Equipment",
@@ -144,7 +151,7 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "menu-board",
     src: "/images/space-menu.jpg",
-    alt: "A cafe chalkboard menu on a black wall beside an espresso machine.",
+    alt: "A cafe chalkboard menu on a concrete wall, with bicycles parked beneath it.",
     caption: "Everything is priced on a card you can read standing up.",
     span: "standard",
     meta: "Room",
@@ -160,10 +167,10 @@ export const galleryFrames: readonly GalleryFrame[] = [
   {
     id: "sign",
     src: "/images/editorial-sign.jpg",
-    alt: "A warm cafe interior with a hanging CAF sign and low pendant lighting.",
-    caption: "Lit from eight in the evening until close.",
+    alt: "Two portafilters and ground coffee laid out on a dark timber bench.",
+    caption: "Dialed in twice a day, and logged both times.",
     span: "tall",
-    meta: "Room · Evening",
+    meta: "Craft",
   },
 ];
 

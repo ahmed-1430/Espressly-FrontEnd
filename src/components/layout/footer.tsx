@@ -147,15 +147,18 @@ export async function Footer() {
         </div>
       </Container>
 
-      {/* Oversized wordmark as a watermark: a final editorial beat rather than a
-          decorative gradient. */}
+      {/*
+        The wordmark returns once more as a watermark to close the page. Kept
+        cropped and low-contrast: at full width it read as a second logo rather
+        than as a closing beat, and pushed the real footer content below the fold.
+      */}
       <div aria-hidden className="relative z-0 mt-16 overflow-hidden">
         <Image
           src="/brand/espressly-logo-cream.png"
           alt=""
           width={855}
           height={239}
-          className="h-auto w-full opacity-[0.05] select-none"
+          className="mx-auto -mb-[6%] w-[130%] max-w-none translate-y-[22%] opacity-[0.055] select-none"
         />
       </div>
     </footer>
