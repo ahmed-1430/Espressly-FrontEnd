@@ -88,13 +88,27 @@ export function SplitLines({
     };
   }, [delay, stagger, duration]);
 
+  // Each line is its own block, so assistive tech would otherwise read the
+  // heading as one run-on sentence. An explicit label keeps the accessible text
+  // natural while the visual lines stay separate.
+  const accessibleText = lines
+    .map((line) => (typeof line === "string" ? line : ""))
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <Tag ref={ref as React.Ref<never>} className={cn("block", className)}>
-      {lines.map((line, index) => (
-        <span key={index} className={cn("line-mask", lineClassName)}>
-          <span>{line}</span>
-        </span>
-      ))}
+    <Tag
+      ref={ref as React.Ref<never>}
+      className={cn("block", className)}
+      aria-label={accessibleText || undefined}
+    >
+      <span aria-hidden className="contents">
+        {lines.map((line, index) => (
+          <span key={index} className={cn("line-mask", lineClassName)}>
+            <span>{line}</span>
+          </span>
+        ))}
+      </span>
     </Tag>
   );
 }

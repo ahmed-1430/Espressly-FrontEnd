@@ -1,0 +1,191 @@
+import Image from "next/image";
+import { Container } from "@/components/layout/container";
+import { Reveal } from "@/components/motion/reveal";
+import { RevealImage } from "@/components/motion/reveal-image";
+import { ButtonLink } from "@/components/ui/button";
+import { SplitLines } from "@/components/motion/split-lines";
+
+/**
+ * About story.
+ *
+ * Long-form editorial. The narrative runs in a narrow measure with a wide
+ * photograph breaking out of it, so the page has two distinct reading modes
+ * rather than one uniform column.
+ */
+export function AboutStory() {
+  return (
+    <section
+      aria-labelledby="story-heading"
+      className="relative bg-background py-24 sm:py-28 lg:py-36"
+    >
+      <Container>
+        <div className="flex items-center gap-4">
+          <span aria-hidden className="h-px w-8 bg-accent" />
+          <span className="eyebrow">The Story</span>
+        </div>
+
+        <h2
+          id="story-heading"
+          className="mt-7 max-w-5xl text-[clamp(2.25rem,6.5vw,5.25rem)] tracking-display"
+        >
+          <SplitLines
+            as="span"
+            lines={[
+              "It began with a",
+              "lever machine and a",
+              "frustration about milk.",
+            ]}
+          />
+        </h2>
+
+        {/* Full-bleed photograph, pulled out of the container measure. */}
+        <div className="mt-14 lg:mt-20">
+          <RevealImage
+            src="/images/space-room.jpg"
+            alt="A cafe interior with warm pendant lights, dark timber and a long counter."
+            width={1800}
+            height={1000}
+            sizes="100vw"
+            className="aspect-16/9 w-full sm:aspect-21/9"
+            parallax={6}
+          />
+        </div>
+
+        <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7 lg:col-start-2">
+            <div className="space-y-6 text-pretty leading-[1.75] text-muted-foreground">
+              <p className="font-display text-[clamp(1.25rem,2.4vw,1.75rem)] leading-snug text-foreground italic">
+                In 2019 the space was twelve square metres, the machine was a
+                second-hand lever, and the sign outside was a sheet of card with
+                the word &ldquo;espresso&rdquo; written on it in marker.
+              </p>
+              <p>
+                The reason for opening it was narrow. After eight years of pulling
+                shots on behalf of other people, we wanted to make one coffee and
+                make it the same every morning. That sounds like a low ambition. It
+                is the hardest thing a coffee shop can attempt.
+              </p>
+              <p>
+                We spent two years on the blend. Eleven versions, a number of
+                disagreements about it, and one afternoon where we very nearly opened
+                a second location instead. What survived was the simplest version we
+                had tried: a dark roast, mostly Brazil, with a small Ethiopian
+                component for the fruit. Cocoa, dried fig, and a finish long enough
+                that people notice it halfway through the sip.
+              </p>
+              <p>
+                Everything since has been logistics around that decision. We roasted
+                on site in 2024 so the coffee would rest the number of days it
+                actually needs. We kept the room quiet because a room you can hear
+                yourself think in is worth more than a room that turns tables. We
+                never added music, and we never added a second blend.
+              </p>
+              <p>
+                What we did add was patience. The pastry is laminated in-house. The
+                filter changes as the week goes on. There is a table at the window
+                that people have quietly claimed as theirs, and we have stopped
+                reseating anyone who sits at it.
+              </p>
+            </div>
+
+            <Reveal className="mt-12 flex flex-wrap gap-4">
+              <ButtonLink href="/menu" variant="outline" arrow>
+                See what we make
+              </ButtonLink>
+              <ButtonLink href="/gallery" variant="ghost">
+                Look at the room
+              </ButtonLink>
+            </Reveal>
+          </div>
+
+          {/* Side rail: pull quotes from the people who work here. */}
+          <aside className="lg:col-span-3 lg:col-start-10">
+            <Reveal stagger={0.1} className="flex flex-col gap-10 lg:sticky lg:top-32">
+              {[
+                {
+                  quote:
+                    "The blend took two years. Everything else was easy by comparison.",
+                  by: "Marisol Reyes — Head Barista",
+                },
+                {
+                  quote:
+                    "A quiet room is not a marketing decision. It is just a quiet room.",
+                  by: "Dev Anand — Founder",
+                },
+              ].map((entry) => (
+                <figure key={entry.by}>
+                  <blockquote className="border-l border-accent/60 pl-5">
+                    <p className="font-display text-xl leading-snug text-foreground italic">
+                      {entry.quote}
+                    </p>
+                  </blockquote>
+                  <figcaption className="micro mt-4 pl-6 text-muted-foreground">
+                    {entry.by}
+                  </figcaption>
+                </figure>
+              ))}
+            </Reveal>
+          </aside>
+        </div>
+
+        {/* Space section: three architectural details. */}
+        <div className="mt-24 lg:mt-36">
+          <div className="flex items-end justify-between gap-8 border-b border-border pb-8">
+            <h3 className="text-[clamp(1.75rem,4vw,3rem)] tracking-display">
+              The room
+            </h3>
+            <p className="micro hidden text-muted-foreground sm:block">
+              Timber, brass, no music
+            </p>
+          </div>
+
+          <Reveal
+            stagger={0.1}
+            margin="-6% 0px -6% 0px"
+            className="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6 lg:gap-10"
+          >
+            {[
+              {
+                image: "/images/space-seating.jpg",
+                alt: "A bright cafe interior with rattan chairs, plants and long shared tables.",
+                title: "Long table",
+                body: "Eleven metres of walnut down the centre of the room. It seats fourteen and it is the first thing to go.",
+              },
+              {
+                image: "/images/space-window.jpg",
+                alt: "A wooden table by a window with a notebook, sunglasses and a small coffee.",
+                title: "Window seats",
+                body: "Four of them, facing out. The best light in the building arrives at about half past ten.",
+              },
+              {
+                image: "/images/craft-machine.jpg",
+                alt: "The chrome face of a lever espresso machine lit warmly from behind.",
+                title: "The bar",
+                body: "Three groups, a brass counter, and no menu board behind it. Everything is priced on a card you can read standing up.",
+              },
+            ].map((entry) => (
+              <article key={entry.title} className="group">
+                <div className="relative aspect-4/5 overflow-hidden bg-background-raised">
+                  <Image
+                    src={entry.image}
+                    alt={entry.alt}
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 640px) 100vw, 32vw"
+                    className="object-cover transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
+                  />
+                </div>
+                <h4 className="mt-5 font-display text-2xl tracking-display">
+                  {entry.title}
+                </h4>
+                <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
+                  {entry.body}
+                </p>
+              </article>
+            ))}
+          </Reveal>
+        </div>
+      </Container>
+    </section>
+  );
+}

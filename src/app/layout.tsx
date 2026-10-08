@@ -4,8 +4,9 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Cursor } from "@/components/motion/cursor";
+import { StructuredData } from "@/components/layout/structured-data";
 import { fontVariables } from "@/styles/fonts";
-import "./globals.css";
+import "@/styles/globals.css";
 
 /**
  * Canonical URL origin.
@@ -89,6 +90,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SmoothScroll />
         <Cursor />
         <Navbar />
+
+        <StructuredData />
 
         <main id="main" className="relative">
           {children}
