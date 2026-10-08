@@ -79,11 +79,14 @@ export function MobileMenu({
     };
   }, [open, onClose]);
 
-  // Route changes close the panel.
+  // Close on route change. Tracked with a ref rather than an effect that calls
+  // `onClose()` directly, which would also fire on mount and push a redundant
+  // state update into the parent on every page load.
+  const openRef = useRef(open);
   useEffect(() => {
-    if (open) onClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, currentPath]);
+    if (openRef.current && open) onClose();
+    openRef.current = open;
+  }, [pathname, currentPath, open, onClose]);
 
   return (
     <div
@@ -104,14 +107,21 @@ export function MobileMenu({
         )}
       />
 
+      {/* The panel stays mounted so opening is a pure transition rather than a
+          mount. `inert` removes it from the tab order while closed, which also
+          keeps its links unfocusable behind the trigger.
+
+          The clip is set inline rather than through a Tailwind arbitrary value:
+          the class form did not survive the build's class extraction, so the
+          closed state silently fell back to no clipping and the panel was visible
+          while nominally shut. */}
       <div
         role="dialog"
         aria-modal={open ? "true" : undefined}
         aria-label="Site navigation"
-        className={cn(
-          "noise absolute inset-x-0 top-0 flex h-[100dvh] flex-col overflow-y-auto overscroll-contain bg-background transition-[clip-path] duration-700 ease-[var(--ease-in-out-quart)]",
-          open ? "clip-path-[inset(0_0_0_0)]" : "clip-path-[inset(0_0_100%_0)]",
-        )}
+        inert={!open}
+        style={{ clipPath: open ? "inset(0 0 0 0)" : "inset(0 0 100% 0)" }}
+        className="noise absolute inset-x-0 top-0 flex h-[100dvh] flex-col overflow-y-auto overscroll-contain bg-background transition-[clip-path] duration-700 ease-[var(--ease-in-out-quart)] motion-reduce:transition-none"
       >
         <Container className="flex flex-1 flex-col pb-10 pt-24 sm:pt-28">
           <nav aria-label="Mobile">

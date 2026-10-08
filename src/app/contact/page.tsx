@@ -3,11 +3,11 @@ import { PageHero } from "@/components/layout/page-hero";
 import { Container } from "@/components/layout/container";
 import { ContactForm } from "@/components/contact/contact-form";
 import { ContactDetails, ContactFaq } from "@/components/contact/contact-details";
-import { siteConfig } from "@/config/site";
+import { location, siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Find Espressly at ${siteConfig.shortDescription} Address, opening hours, wholesale enquiries and a direct line to the counter.`,
+  description: `Address, opening hours, wholesale enquiries and a direct line to the bar at Espressly on ${location.street}. We answer within two working days.`,
   alternates: { canonical: "/contact" },
   openGraph: {
     title: `Contact — ${siteConfig.name}`,

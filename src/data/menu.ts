@@ -112,6 +112,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Equal parts espresso and warm milk in a 120 ml glass.",
     unit: "ml",
     price: 5.25,
+    image: "/images/bar-cortado.jpg",
   },
   {
     id: "cappuccino",
@@ -120,6 +121,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Wet, dry, or somewhere in between. Tell us and we will not argue.",
     unit: "ml",
     price: 5.75,
+    image: "/images/bar-cappuccino.jpg",
     dietary: ["vegetarian", "contains-dairy"],
   },
   {
@@ -157,6 +159,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "A double shot poured over vanilla bean gelato, at the table.",
     unit: "set",
     price: 8.5,
+    image: "/images/food-affogato.jpg",
     dietary: ["vegetarian", "contains-dairy"],
   },
 
@@ -331,7 +334,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.5,
     dietary: ["vegetarian"],
     tasting: "Grassy and sweet, with no bitterness at all if it is whisked properly.",
-    image: "/images/tea-matcha.jpg",
+    image: "/images/tea-glass.jpg",
   },
   {
     id: "sencha",
@@ -341,6 +344,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 5.5,
     dietary: ["vegan", "gluten-free"],
+    image: "/images/tea-loose-leaf.jpg",
   },
   {
     id: "assam",
@@ -369,6 +373,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 5.75,
     dietary: ["vegan", "gluten-free"],
+    image: "/images/tea-pot.jpg",
   },
   {
     id: "chai",
@@ -378,7 +383,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6,
     dietary: ["vegetarian", "contains-dairy"],
-    image: "/images/tea-glass.jpg",
+    image: "/images/tea-matcha-bowl.jpg",
   },
 
   // --- pastry ---
@@ -459,7 +464,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "set",
     price: 8,
     dietary: ["vegetarian", "contains-dairy"],
-    image: "/images/food-toast.jpg",
+    image: "/images/food-bread.jpg",
   },
 
   // --- breakfast ---
@@ -499,6 +504,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "set",
     price: 15,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/food-toast.jpg",
   },
   {
     id: "granola-bowl",

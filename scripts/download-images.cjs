@@ -37,6 +37,7 @@ const MANIFEST = {
   // --- tea ---
   "tea-matcha": { id: "1536256263959-770b48d82b0a", width: 1200 },
   "tea-matcha-bowl": { id: "1582793988951-9aed5509eb97", width: 1200 },
+  "tea-loose-leaf": { id: "1576092768241-dec231879fc3", width: 1200 },
   "tea-glass": { id: "1576092768241-dec231879fc3", width: 1200 },
   "tea-pot": { id: "1594631252845-29fc4cc8cde9", width: 1200 },
   "tea-ceramic": { id: "1572442388796-11668a67e53d", width: 1200 },
@@ -55,6 +56,7 @@ const MANIFEST = {
   "food-dessert": { id: "1519915028121-7d3463d20b13", width: 1200 },
 
   // --- space ---
+  "space-counter": { id: "1453614512568-c4024d13c247", width: 1800 },
   "space-seating": { id: "1554118811-1e0d58224f24", width: 1800 },
   "space-room": { id: "1521017432531-fbd92d768814", width: 1800 },
   "space-menu": { id: "1493857671505-72967e2e2760", width: 1800 },

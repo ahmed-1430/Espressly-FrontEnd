@@ -53,7 +53,14 @@ export function RevealImage({
       },
       { rootMargin: "-8% 0px -8% 0px", threshold: 0.05 },
     );
-    observer.observe(frame);
+
+    // A frame that mounts above the viewport — restored scroll position, or a deep
+    // link to an anchor below it — will never intersect, so release it directly.
+    if (frame.getBoundingClientRect().bottom < 0) {
+      frame.classList.add("is-revealed");
+    } else {
+      observer.observe(frame);
+    }
 
     let cleanupParallax = () => {};
     if (parallax > 0) {

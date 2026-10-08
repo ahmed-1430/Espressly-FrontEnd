@@ -125,6 +125,46 @@ export const galleryFrames: readonly GalleryFrame[] = [
     span: "standard",
     meta: "Filter",
   },
+  {
+    id: "counter-view",
+    src: "/images/space-counter.jpg",
+    alt: "A barista working behind a white brick counter lined with shelves and stock.",
+    caption: "Seven in the morning, before the room fills.",
+    span: "wide",
+    meta: "Bar · Morning",
+  },
+  {
+    id: "brew-station",
+    src: "/images/hero-bar.jpg",
+    alt: "An espresso machine and grinders on a warm wooden brew bar under pendant lights.",
+    caption: "Three groups, two grinders, one shot at a time.",
+    span: "standard",
+    meta: "Equipment",
+  },
+  {
+    id: "menu-board",
+    src: "/images/space-menu.jpg",
+    alt: "A cafe chalkboard menu on a black wall beside an espresso machine.",
+    caption: "Everything is priced on a card you can read standing up.",
+    span: "standard",
+    meta: "Room",
+  },
+  {
+    id: "street-front",
+    src: "/images/space-street.jpg",
+    alt: "A cafe terrace on a cobbled street with an A-board menu on the pavement.",
+    caption: "The A-board goes out when the weather allows.",
+    span: "standard",
+    meta: "Frontage",
+  },
+  {
+    id: "sign",
+    src: "/images/editorial-sign.jpg",
+    alt: "A warm cafe interior with a hanging CAF sign and low pendant lighting.",
+    caption: "Lit from eight in the evening until close.",
+    span: "tall",
+    meta: "Room · Evening",
+  },
 ];
 
 export const homeGalleryFrames = [

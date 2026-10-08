@@ -9,6 +9,17 @@
  * as one material rather than two themes.
  */
 
+/*
+ * Registered so the clip reveal can animate `--reveal-p` from 0% to 100%.
+ * Without `@property` the percentage is an untyped custom property and would jump
+ * rather than interpolate.
+ */
+@property --reveal-p {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
 :root {
   /* --- surface --- */
   --background: #14100d;
@@ -275,8 +286,27 @@
     transform: scale3d(0.965, 0.965, 1);
   }
 
+  /*
+   * The clip reveal uses a mask rather than `clip-path`.
+   *
+   * `clip-path` reduces an element's intersection rectangle to nothing while the
+   * clip is closed, so an IntersectionObserver watching that element never sees it
+   * intersect and can never release it — the reveal deadlocks. A mask is purely
+   * paint: it hides the pixels without affecting geometry, so the observer behaves
+   * as expected.
+   */
   .reveal-pending[data-reveal="clip"] {
-    clip-path: inset(0 0 100% 0);
+    --reveal-p: 0%;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 var(--reveal-p),
+      transparent var(--reveal-p)
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 var(--reveal-p),
+      transparent var(--reveal-p)
+    );
   }
 
   [data-reveal] {
@@ -285,7 +315,7 @@
         var(--ease-out-expo),
       transform var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
         var(--ease-out-expo),
-      clip-path var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
+      -webkit-mask-image var(--reveal-duration, 0.9s) var(--reveal-delay, 0s)
         var(--ease-out-expo);
   }
 
@@ -298,7 +328,7 @@
   }
 
   [data-reveal].is-revealed[data-reveal="clip"] {
-    clip-path: inset(0 0 0 0);
+    --reveal-p: 100%;
   }
 
   /* Text reveal: each line is masked and slides up from behind its own edge. */

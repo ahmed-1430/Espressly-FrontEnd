@@ -107,15 +107,22 @@ export function MenuExplorer() {
 
   return (
     <div>
-      {/* --- category navigation --- */}
+      {/*
+        Category navigation.
+
+        Sticky rather than fixed, so it stays part of the document flow and never
+        overlaps the section heading. Below `lg` the chips scroll horizontally
+        inside a full-bleed rail; from `lg` the rail becomes a static flex row
+        with the live count beside it.
+      */}
       <div className="sticky top-16 z-40 -mx-5 border-y border-border bg-background/90 backdrop-blur-md sm:-mx-8 lg:top-[76px] lg:mx-0 lg:border-x-0 lg:border-t-0">
-        <div className="lg:flex lg:items-center lg:justify-between">
+        <div className="lg:flex lg:items-center lg:justify-between lg:gap-6">
           <div
             role="tablist"
             aria-label="Menu categories"
             aria-orientation="horizontal"
             onKeyDown={onRegionKeyDown}
-            className="mask-fade-x flex snap-x snap-mandatory gap-1 overflow-x-auto px-5 py-3 [scrollbar-width:none] sm:px-8 lg:mask-none lg:flex-1 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden"
+            className="mask-fade-x flex snap-x snap-mandatory gap-1 overflow-x-auto px-5 py-3 [scrollbar-width:none] sm:px-8 lg:mask-none lg:min-w-0 lg:flex-1 lg:flex-wrap lg:overflow-visible lg:px-0 lg:py-2 [&::-webkit-scrollbar]:hidden"
           >
             {menuCategories.map((entry) => {
               const selected = entry.id === active;

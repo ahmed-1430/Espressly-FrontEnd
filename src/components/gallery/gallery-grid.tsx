@@ -150,7 +150,7 @@ function Lightbox({
   onStep: (delta: number) => void;
 }) {
   const frame = frames[index];
-  const dialogRef = useModalDialog();
+  const dialogRef = useModalDialog(true);
 
   return (
     <dialog
@@ -249,18 +249,25 @@ function Lightbox({
 }
 
 /**
- * Opens a dialog as a modal on mount.
+ * Keeps a native dialog in sync with its `open` prop.
  *
  * `showModal()` gives focus trapping, Escape handling and inertness of the rest of
- * the page without hand-rolling any of it. The ref is stable, so this runs once.
+ * the page without hand-rolling any of it. This component is only rendered while
+ * the lightbox is open, so `open` is always true here.
  */
-function useModalDialog() {
+function useModalDialog(open: boolean) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const node = ref.current;
-    if (node && !node.open) node.showModal();
-  }, []);
+    if (!node) return;
+
+    // Drive the dialog from the `open` prop rather than opening on mount: the
+    // parent owns the state, and an unconditional showModal on mount would leave
+    // the dialog stuck open if the parent unmounted it for any other reason.
+    if (open && !node.open) node.showModal();
+    if (!open && node.open) node.close();
+  }, [open]);
 
   return ref;
 }

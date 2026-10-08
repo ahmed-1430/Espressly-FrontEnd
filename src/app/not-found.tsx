@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="noise relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-background px-6 text-center">
+    <div className="noise relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-background px-6 pt-24 pb-20 text-center sm:pt-28">
       <div
         aria-hidden
         className="grid-lines pointer-events-none absolute inset-0 opacity-40"

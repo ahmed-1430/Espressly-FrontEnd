@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Cursor } from "@/components/motion/cursor";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { StructuredData } from "@/components/layout/structured-data";
 import { fontVariables } from "@/styles/fonts";
 import "@/styles/globals.css";
@@ -45,12 +46,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
+    // A generated card, not the wordmark: link previews are read at 1200px wide
+    // and an 855px logo crops badly in the card.
     images: [
       {
-        url: "/brand/espressly-logo-cream.png",
-        width: 855,
-        height: 239,
-        alt: siteConfig.name,
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
       },
     ],
   },
@@ -58,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
-    images: ["/brand/espressly-logo-cream.png"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -90,6 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SmoothScroll />
         <Cursor />
         <Navbar />
+        <ScrollProgress />
 
         <StructuredData />
 

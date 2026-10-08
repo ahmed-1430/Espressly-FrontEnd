@@ -46,7 +46,7 @@ export function SplitLines({
     if (!masks.length) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    if (reduce || node.getBoundingClientRect().bottom < 0) {
       masks.forEach((mask) => mask.classList.add("is-revealed"));
       return;
     }
