@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
 
@@ -7,38 +6,35 @@ const team = [
     name: "Dev Anand",
     role: "Founder",
     since: "2019",
-    note: "Opened the first twelve square metres. Still works the bar on Saturdays.",
-    image: "/images/craft-pour.jpg",
+    note: "Opened the first twelve square metres with one lever machine and a sheet of card for a sign. Still works the bar on Saturdays.",
   },
   {
     name: "Marisol Reyes",
     role: "Head Barista",
     since: "2020",
-    note: "Built the recipe card every drink is built from. Wrote most of the blend notes.",
-    image: "/images/space-window.jpg",
+    note: "Wrote the recipe card every drink on our menu is built from, and most of the blend notes on the beans we sell.",
   },
   {
     name: "Tomas Beck",
     role: "Roaster",
     since: "2024",
-    note: "Runs the twelve-kilo drum in the back room, Tuesdays and Fridays, from five.",
-    image: "/images/craft-origin.jpg",
+    note: "Runs the twelve-kilo drum in the back room, Tuesdays and Fridays, starting at five in the morning.",
   },
   {
     name: "Priya Raman",
     role: "Kitchen",
     since: "2022",
-    note: "Laminates the pastry each morning. Has opinions about butter, all of them right.",
-    image: "/images/food-croissant.jpg",
+    note: "Laminates the pastry each morning before the first pour. Has opinions about butter, all of which are correct.",
   },
 ] as const;
 
 /**
- * Team section.
+ * Team roster.
  *
- * Four people, presented as an editorial list rather than avatar cards. Portraits
- * are photography of the work rather than headshots, which keeps the section
- * honest about what the team actually does.
+ * Deliberately typographic rather than a grid of headshots. We do not have
+ * photographs of the people who work here, and putting stock images of unrelated
+ * scenes beside their names would misrepresent them. The names, roles and dates
+ * carry the section instead.
  */
 export function AboutTeam() {
   return (
@@ -64,43 +60,36 @@ export function AboutTeam() {
           </div>
 
           <p className="max-w-sm text-pretty leading-relaxed text-muted-foreground">
-            Everyone here pulls on bar. Nobody works a register while someone else
+            Everyone here pulls on bar. Nobody works a register while somebody else
             does the hard part.
           </p>
         </div>
 
         <Reveal
-          stagger={0.1}
+          stagger={0.08}
           margin="-6% 0px -6% 0px"
-          className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8"
+          className="mt-14 grid gap-x-14 gap-y-0 lg:mt-20 lg:grid-cols-2"
         >
           {team.map((person) => (
-            <article key={person.name} className="group">
-              <div className="relative aspect-3/4 overflow-hidden bg-background-raised">
-                <Image
-                  src={person.image}
-                  alt=""
-                  fill
-                  loading="lazy"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 48vw, 24vw"
-                  className="object-cover transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
-                />
-                <span
-                  aria-hidden
-                  className="absolute inset-0 bg-gradient-to-t from-background-sunken/80 via-transparent to-transparent"
-                />
-                <span className="micro absolute right-4 bottom-4 text-accent-bright">
-                  Since {person.since}
-                </span>
+            <article
+              key={person.name}
+              className="group flex flex-col gap-5 border-t border-border py-9 sm:flex-row sm:items-baseline sm:gap-8"
+            >
+              <div className="sm:w-56 sm:shrink-0">
+                <h3 className="font-display text-[1.75rem] leading-tight tracking-display">
+                  {person.name}
+                </h3>
+                <p className="micro mt-2 text-accent">{person.role}</p>
               </div>
 
-              <h3 className="mt-5 font-display text-2xl tracking-display">
-                {person.name}
-              </h3>
-              <p className="micro mt-2 text-accent">{person.role}</p>
-              <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
-                {person.note}
-              </p>
+              <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
+                <p className="text-pretty leading-relaxed text-muted-foreground">
+                  {person.note}
+                </p>
+                <p className="micro shrink-0 text-muted-foreground/70 sm:pt-1">
+                  Since {person.since}
+                </p>
+              </div>
             </article>
           ))}
         </Reveal>

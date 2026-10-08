@@ -24,7 +24,7 @@ export default function ContactPage() {
         title="Contact"
         lede="The door is on Queen Street West. Ask for the counter, not a manager — the person who pulls your coffee is the person who will answer."
         image="/images/space-counter.jpg"
-        imageAlt="A warmly lit cafe counter lined with bottles and pendant lights."
+        imageAlt="A barista working behind a white brick counter."
         meta={[
           { label: "Reply within", value: "2 working days" },
           { label: "Kitchen until", value: "15:00" },
@@ -51,6 +51,22 @@ export default function ContactPage() {
             <div className="mt-12">
               <ContactForm />
             </div>
+
+            {/* Balances the taller details column and sets expectations up front. */}
+            <dl className="mt-14 grid gap-x-10 gap-y-7 border-t border-border pt-10 sm:grid-cols-3">
+              {[
+                { label: "Answered by", value: "The person who pulls your coffee" },
+                { label: "Typical reply", value: "Same day, two working days at worst" },
+                { label: "Not attached", value: "No mailing list, ever" },
+              ].map((entry) => (
+                <div key={entry.label}>
+                  <dt className="micro text-muted-foreground">{entry.label}</dt>
+                  <dd className="mt-2 text-pretty leading-snug text-foreground-soft">
+                    {entry.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
           <aside className="lg:col-span-5 lg:border-l lg:border-border lg:pl-14">
