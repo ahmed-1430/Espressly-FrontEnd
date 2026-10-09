@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   dietaryLabels,
@@ -30,7 +31,9 @@ export function MenuExplorer() {
   const [phase, setPhase] = useState<"idle" | "leaving" | "entering">("idle");
   const pendingRef = useRef<MenuCategoryId | null>(null);
   const regionRef = useRef<HTMLDivElement>(null);
+  const tablistRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
+  const reduce = useReducedMotion();
 
   const items = useMemo(
     () => menuItems.filter((item) => item.category === active),
@@ -87,6 +90,36 @@ export function MenuExplorer() {
     }
   }, []);
 
+  /*
+   * Keep the selected chip visible in the mobile rail.
+   *
+   * On a narrow screen the categories overflow into a horizontal scroller, so
+   * selecting one with the arrow keys would otherwise move focus to a chip that
+   * is still off-screen — the ring lands somewhere the reader cannot see.
+   *
+   * `nearest` keeps the movement minimal and does nothing when the chip is
+   * already in view, which is the common case on desktop where the rail does not
+   * scroll at all.
+   */
+  useEffect(() => {
+    const chip = tablistRef.current?.querySelector<HTMLElement>(
+      `[data-category="${active}"]`,
+    );
+    if (!chip) return;
+
+    const rail = tablistRef.current;
+    if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+
+    const railBox = rail.getBoundingClientRect();
+    const chipBox = chip.getBoundingClientRect();
+    if (chipBox.left >= railBox.left && chipBox.right <= railBox.right) return;
+
+    rail.scrollTo({
+      left: rail.scrollLeft + (chipBox.left - railBox.left) - 16,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [active, reduce]);
+
   function onRegionKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     const index = menuCategories.findIndex((entry) => entry.id === active);
@@ -123,6 +156,7 @@ export function MenuExplorer() {
             aria-orientation="horizontal"
             onKeyDown={onRegionKeyDown}
             className="mask-fade-x flex snap-x snap-mandatory gap-1 overflow-x-auto px-5 py-3 [scrollbar-width:none] sm:px-8 lg:mask-none lg:min-w-0 lg:flex-1 lg:flex-wrap lg:overflow-visible lg:px-0 lg:py-2 [&::-webkit-scrollbar]:hidden"
+            ref={tablistRef}
           >
             {menuCategories.map((entry) => {
               const selected = entry.id === active;
@@ -143,13 +177,22 @@ export function MenuExplorer() {
                   )}
                 >
                   {entry.label}
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "absolute inset-x-3 bottom-1 h-px origin-left bg-accent transition-transform duration-500 ease-[var(--ease-out-expo)] lg:inset-x-5",
-                      selected ? "scale-x-100" : "scale-x-0",
-                    )}
-                  />
+                  {/*
+                    One shared element, so the underline travels between
+                    categories instead of each chip blinking its own into being.
+                  */}
+                  {selected ? (
+                    <motion.span
+                      layoutId="menu-active-category"
+                      aria-hidden
+                      className="absolute inset-x-3 bottom-1 h-px origin-left bg-accent lg:inset-x-5"
+                      transition={
+                        reduce
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 420, damping: 34, mass: 0.7 }
+                      }
+                    />
+                  ) : null}
                 </button>
               );
             })}

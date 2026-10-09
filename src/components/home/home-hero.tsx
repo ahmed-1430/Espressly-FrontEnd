@@ -143,29 +143,34 @@ export function HomeHero() {
             className="hairline-draw mt-10 h-px w-full max-w-md bg-border-strong"
           />
 
-          <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <p
-              data-hero-meta
-              className="max-w-md text-pretty text-[clamp(1rem,1.4vw,1.1875rem)] leading-relaxed text-foreground-soft"
-            >
-              One blend, roasted weekly, pulled to order on a three-group lever. We
-              would rather make four coffees properly than forty approximately.
-            </p>
+          <p
+            data-hero-meta
+            className="mt-8 max-w-md text-pretty text-[clamp(1rem,1.4vw,1.1875rem)] leading-relaxed text-foreground-soft"
+          >
+            One blend, roasted weekly, pulled to order on a three-group lever. We
+            would rather make four coffees properly than forty approximately.
+          </p>
+        </div>
 
-            <div
-              data-hero-cta
-              className="flex flex-wrap items-center gap-4 lg:shrink-0"
-            >
-              <Magnetic>
-                <ButtonLink href="/menu" size="lg" variant="primary" arrow>
-                  See the menu
-                </ButtonLink>
-              </Magnetic>
-              <ButtonLink href="/shop" size="lg" variant="outline">
-                Shop beans
-              </ButtonLink>
-            </div>
-          </div>
+        {/*
+          The action row sits outside the `max-w-4xl` measure that holds the
+          headline. Inside it, `justify-between` only had 896px to work with and
+          the buttons crowded the paragraph; spanning the full container and
+          anchoring right sets them opposite the type instead, which is the
+          arrangement the rest of the page uses.
+        */}
+        <div
+          data-hero-cta
+          className="mt-10 flex flex-wrap items-center gap-4 lg:mt-12 lg:justify-end"
+        >
+          <Magnetic>
+            <ButtonLink href="/menu" size="lg" variant="primary" arrow>
+              See the menu
+            </ButtonLink>
+          </Magnetic>
+          <ButtonLink href="/shop" size="lg" variant="outline">
+            Shop beans
+          </ButtonLink>
         </div>
 
         <div

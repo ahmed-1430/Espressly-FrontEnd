@@ -34,6 +34,31 @@ export function GalleryViewer({
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
   const reduce = useReducedMotion();
+  const filmstripRef = useRef<HTMLDivElement>(null);
+  const activeThumbRef = useRef<HTMLButtonElement>(null);
+
+  /*
+   * Keep the current frame's thumbnail in view.
+   *
+   * Eighteen thumbs overflow the strip at almost every viewport, so stepping with
+   * the arrow keys or swiping would otherwise walk the selection out of sight —
+   * the outline marking the current frame scrolls away while it is still the
+   * current frame.
+   */
+  useEffect(() => {
+    const strip = filmstripRef.current;
+    const thumb = activeThumbRef.current;
+    if (!strip || !thumb) return;
+
+    const stripBox = strip.getBoundingClientRect();
+    const thumbBox = thumb.getBoundingClientRect();
+    if (thumbBox.left >= stripBox.left && thumbBox.right <= stripBox.right) return;
+
+    strip.scrollTo({
+      left: strip.scrollLeft + (thumbBox.left - stripBox.left) - strip.clientWidth / 2 + thumb.clientWidth / 2,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [index, reduce]);
 
   const handlePrevious = useCallback(() => onStep(-1), [onStep]);
   const handleNext = useCallback(() => onStep(1), [onStep]);
@@ -221,11 +246,15 @@ export function GalleryViewer({
         </div>
 
         {/* Filmstrip doubles as a position indicator and a jump target. */}
-        <div className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          ref={filmstripRef}
+          className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {galleryFrames.map((entry, entryIndex) => (
             <button
               key={entry.id}
               type="button"
+              ref={entryIndex === index ? activeThumbRef : undefined}
               onClick={() => onStep(entryIndex - index)}
               aria-label={`Go to ${entry.meta} — ${entry.caption}`}
               aria-current={entryIndex === index ? "true" : undefined}
