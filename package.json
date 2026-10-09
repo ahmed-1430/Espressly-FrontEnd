@@ -16,7 +16,9 @@
     "verify:layout": "node scripts/verify-layout.cjs",
     "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals",
     "audit:assets": "node scripts/audit-assets.cjs",
-    "shoot": "node scripts/shoot.cjs"
+    "shoot": "node scripts/shoot.cjs",
+    "assets:alt": "node scripts/verify-gallery-alt.cjs",
+    "assets:list": "node scripts/list-images.cjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
