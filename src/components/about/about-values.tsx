@@ -74,21 +74,28 @@ export function AboutValues() {
           {values.map((value) => (
             <article
               key={value.index}
-              className="group grid gap-4 border-t border-border-dark py-9 transition-colors duration-500 hover:border-accent-deep sm:grid-cols-12 sm:gap-8 lg:py-11"
+              className="group grid gap-4 border-t border-border-dark py-9 transition-colors duration-500 hover:border-accent-deep sm:gap-8 lg:grid-cols-12 lg:py-11"
             >
-              <p className="micro pt-1.5 text-accent-deep sm:col-span-1">
+              <p className="micro pt-1.5 text-accent-deep lg:col-span-1">
                 {value.index}
               </p>
 
-              <h3 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-tight tracking-display sm:col-span-4">
+              <h3 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-tight tracking-display lg:col-span-6">
                 {value.title}
               </h3>
 
-              <p className="text-pretty leading-relaxed text-ink-espresso-soft sm:col-span-5">
+              <p className="text-pretty leading-relaxed text-ink-espresso-soft lg:col-span-5">
                 {value.body}
               </p>
 
-              <p className="sm:col-span-2 sm:text-right">
+              {/*
+                The commitment badge takes a row of its own rather than a share of
+                the twelve. Sharing tracks squeezed "Roasted Tue & Fri, on site"
+                into a 91px column at tablet width, which wrapped the stamp onto
+                five lines; on its own row it reads as the stamped footnote it is
+                meant to be.
+              */}
+              <p className="lg:col-span-12 lg:mt-1">
                 <span className="micro inline-flex items-center gap-2 border border-border-dark px-3 py-2 text-accent-deep">
                   {value.commitment}
                 </span>

@@ -1,35 +1,81 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { galleryFrames, type GalleryFrame } from "@/data/gallery";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
+import { GalleryViewer } from "./gallery-viewer";
 
 /**
  * Gallery.
  *
- * An authored composition rather than a masonry dump: each frame declares whether
- * it is wide, tall or standard, and the grid honours that so the page reads like a
- * magazine spread. Hover raises the frame and reveals its caption; clicking opens
- * a lightbox with focus trapping and keyboard navigation.
+ * An authored sequence of spreads, not a grid to be filled. Each frame declares
+ * how it sits — `full` breaks the measure, `inset` is set narrow against
+ * whitespace, `tall` drops down the page — and negative space between spreads is
+ * part of the composition rather than leftover space.
+ *
+ * The previous implementation used a 12-column grid with `row-span-2` items whose
+ * height came from `min-height: 100%`. Inside implicit auto rows that resolves
+ * circularly and the rows collapsed: nineteen frames rendered into a 965px band
+ * of slivers. Layout here is driven by explicit aspect ratios on a flex column,
+ * which cannot collapse.
+ *
+ * Reveal is a GSAP clip-path driven by ScrollTrigger batch, so frames arrive as
+ * they enter rather than all at once on mount.
  */
 export function GalleryGrid() {
+  const rootRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const frames = useMemo(() => galleryFrames, []);
+  /* --- staggered clip reveal as frames scroll into view --- */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const frames = root.querySelectorAll<HTMLElement>("[data-frame]");
+
+    if (reduce) {
+      frames.forEach((frame) => {
+        frame.style.setProperty("--frame-reveal", "100%");
+      });
+      return;
+    }
+
+    // A CSS custom property is tweened rather than clip-path directly: the clip
+    // reads the variable, so the browser still only animates a composited change.
+    const ctx = gsap.context(() => {
+      gsap.set(frames, { "--frame-reveal": "0%" });
+      ScrollTrigger.batch(frames, {
+        start: "top 88%",
+        once: true,
+        onEnter: (batch) =>
+          gsap.to(batch, {
+            "--frame-reveal": "100%",
+            duration: 1.25,
+            ease: "power3.out",
+            stagger: 0.1,
+            overwrite: true,
+          }),
+      });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
 
   function step(delta: number) {
     setActiveIndex((current) => {
       if (current === null) return null;
-      return (current + delta + frames.length) % frames.length;
+      return (current + delta + galleryFrames.length) % galleryFrames.length;
     });
   }
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-x-4 gap-y-12 sm:grid-cols-2 sm:gap-y-16 lg:grid-cols-12 lg:gap-x-6">
-        {frames.map((frame, index) => (
-          <GalleryItem
+      <div ref={rootRef} className="flex flex-col gap-24 sm:gap-32 lg:gap-44">
+        {galleryFrames.map((frame, index) => (
+          <GalleryFrame
             key={frame.id}
             frame={frame}
             index={index}
@@ -39,8 +85,7 @@ export function GalleryGrid() {
       </div>
 
       {activeIndex !== null ? (
-        <Lightbox
-          frames={frames}
+        <GalleryViewer
           index={activeIndex}
           onClose={() => setActiveIndex(null)}
           onStep={step}
@@ -50,7 +95,17 @@ export function GalleryGrid() {
   );
 }
 
-function GalleryItem({
+/** Explicit ratios, so a frame's height is never derived from a parent track. */
+const ratioFor = (span: GalleryFrame["span"]) =>
+  span === "full"
+    ? "aspect-16/10 sm:aspect-21/9"
+    : span === "tall"
+      ? "aspect-3/4"
+      : span === "inset"
+        ? "aspect-4/5"
+        : "aspect-4/3";
+
+function GalleryFrame({
   frame,
   index,
   onOpen,
@@ -59,219 +114,98 @@ function GalleryItem({
   index: number;
   onOpen: () => void;
 }) {
-  const span =
-    frame.span === "wide"
-      ? "sm:col-span-2"
-      : frame.span === "tall"
-        ? "lg:row-span-2"
-        : "";
-
-  // Tall frames get a portrait ratio so the row-span-2 reads correctly.
-  const ratio =
-    frame.span === "wide"
-      ? "aspect-16/9"
-      : frame.span === "tall"
-        ? "aspect-3/4 h-full min-h-[26rem] lg:min-h-full"
-        : "aspect-4/3";
+  const isHalf = frame.span === "half";
 
   return (
     <figure
+      data-frame
       className={cn(
-        "group relative",
-        frame.span === "tall" && "lg:flex",
-        span,
+        "flex flex-col",
+        isHalf && "sm:grid sm:grid-cols-2 sm:gap-10 sm:items-end lg:gap-16",
       )}
     >
-      <button
-        type="button"
-        onClick={onOpen}
-        data-cursor="view"
-        aria-label={`View ${frame.meta} — ${frame.caption}`}
+      {/*
+        `inset` frames are offset to one side rather than centred, which is what
+        stops the page reading as a stack of centred rows.
+      */}
+      <div
         className={cn(
-          "relative block w-full overflow-hidden bg-background-raised text-left",
-          ratio,
-          frame.span === "tall" && "lg:h-full",
+          "group relative w-full overflow-hidden bg-background-raised",
+          ratioFor(frame.span),
+          frame.span === "full" && "sm:-mx-6 lg:-mx-16",
+          frame.span === "inset" &&
+            "sm:w-2/3 sm:shrink-0 sm:self-start lg:w-1/2",
+          frame.span === "tall" && "sm:w-3/4 lg:w-1/2",
+          isHalf && "sm:w-full",
         )}
+        style={
+          {
+            // Clipped from the bottom edge; the frame opens upward as it arrives.
+            "--frame-reveal": "0%",
+            clipPath: "inset(0 0 var(--frame-reveal) 0)",
+          } as React.CSSProperties
+        }
       >
-        <Image
-          src={frame.src}
-          alt={frame.alt}
-          fill
-          loading={index < 2 ? "eager" : "lazy"}
-          // Sizes are capped deliberately: a wide frame inside the 110rem
-          // container is at most ~85vw on a wide display, and asking for 100vw
-          // was requesting a derivative roughly twice the size it needs.
-          sizes={
-            frame.span === "wide"
-              ? "(max-width: 640px) 92vw, (max-width: 1024px) 88vw, 60vw"
-              : "(max-width: 640px) 92vw, (max-width: 1024px) 44vw, 30vw"
-          }
-          className="object-cover transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
-        />
-
-        {/* Caption panel wipes up from the bottom edge on hover. */}
-        <span
-          aria-hidden
-          className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full items-end justify-between gap-4 bg-gradient-to-t from-background-sunken/90 via-background-sunken/55 to-transparent p-5 pb-6 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0",
-            "pt-14",
-          )}
+        <button
+          type="button"
+          onClick={onOpen}
+          data-cursor="view"
+          aria-label={`View ${frame.meta} — ${frame.caption}`}
+          className="absolute inset-0 block h-full w-full cursor-none text-left"
         >
-          <span className="text-sm leading-snug text-foreground">
-            {frame.caption}
-          </span>
-          <span className="micro shrink-0 text-accent-bright">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </span>
-      </button>
-
-      <figcaption className="micro mt-3 flex items-center justify-between gap-4 text-muted-foreground">
-        <span>{frame.meta}</span>
-        <span>{String(index + 1).padStart(2, "0")}</span>
-      </figcaption>
-    </figure>
-  );
-}
-
-/**
- * Full-screen lightbox.
- *
- * A native `dialog` gives focus trapping, Escape handling and inertness of the
- * rest of the page for free. Arrow keys step through the set, and the counter
- * keeps position legible.
- */
-function Lightbox({
-  frames,
-  index,
-  onClose,
-  onStep,
-}: {
-  frames: readonly GalleryFrame[];
-  index: number;
-  onClose: () => void;
-  onStep: (delta: number) => void;
-}) {
-  const frame = frames[index];
-  const dialogRef = useModalDialog(true);
-
-  return (
-    <dialog
-      ref={dialogRef}
-      onClose={onClose}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowRight") {
-          event.preventDefault();
-          onStep(1);
-        }
-        if (event.key === "ArrowLeft") {
-          event.preventDefault();
-          onStep(-1);
-        }
-      }}
-      className="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none border-0 bg-background-sunken/96 p-0 text-foreground backdrop-blur-md"
-      aria-label="Gallery image viewer"
-    >
-      <div className="relative flex h-full flex-col">
-        <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 sm:px-8">
-          <p className="micro text-muted-foreground">
-            <span className="text-accent-bright">
-              {String(index + 1).padStart(2, "0")}
-            </span>{" "}
-            / {String(frames.length).padStart(2, "0")}
-            <span className="mx-3 text-border-strong">·</span>
-            {frame.meta}
-          </p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="group flex h-11 items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <span className="micro">Close</span>
-            <span aria-hidden className="relative block h-4 w-4">
-              <span className="absolute left-1/2 top-0 h-px w-full -translate-x-1/2 rotate-45 bg-current" />
-              <span className="absolute left-1/2 top-0 h-px w-full -translate-x-1/2 -rotate-45 bg-current" />
-            </span>
-          </button>
-        </div>
-
-        <div className="relative flex-1 overflow-hidden">
           <Image
-            key={frame.id}
             src={frame.src}
             alt={frame.alt}
             fill
-            // Object-contain at full viewport width, so this one does need 100vw.
-            sizes="100vw"
-            className="animate-[lightbox-in_520ms_var(--ease-out-expo)_both] object-contain px-4 py-6 sm:px-16 sm:py-10"
+            loading={index < 3 ? "eager" : "lazy"}
+            sizes={
+              frame.span === "full"
+                ? "(max-width: 640px) 92vw, (max-width: 1024px) 88vw, 74vw"
+                : "(max-width: 640px) 92vw, (max-width: 1024px) 44vw, 34vw"
+            }
+            className="object-cover transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]"
           />
 
-          <button
-            type="button"
-            onClick={() => onStep(-1)}
-            aria-label="Previous image"
-            className="group absolute left-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-border bg-background/60 text-foreground-soft backdrop-blur-sm transition-colors hover:border-accent hover:text-accent-bright sm:left-6"
+          {/* Caption panel wipes up on hover, desktop only. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full items-end justify-between gap-6 bg-linear-to-t from-background-sunken/92 via-background-sunken/55 to-transparent px-7 pb-7 pt-20 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0 lg:flex"
           >
-            <svg aria-hidden viewBox="0 0 24 12" fill="none" className="h-2.5 w-6">
-              <path
-                d="M24 6H3m0 0 5-5M3 6l5 5"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onStep(1)}
-            aria-label="Next image"
-            className="group absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-border bg-background/60 text-foreground-soft backdrop-blur-sm transition-colors hover:border-accent hover:text-accent-bright sm:right-6"
-          >
-            <svg aria-hidden viewBox="0 0 24 12" fill="none" className="h-2.5 w-6">
-              <path
-                d="M0 6h21m0 0-5-5m5 5-5 5"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div className="border-t border-border px-5 py-5 sm:px-8">
-          <p className="text-pretty leading-relaxed text-foreground-soft">
-            {frame.caption}
-          </p>
-          <p className="micro mt-3 text-muted-foreground">
-            Use ← → to move, Esc to close
-          </p>
-        </div>
+            <span className="max-w-sm text-pretty leading-snug text-foreground">
+              {frame.caption}
+            </span>
+            <span className="micro shrink-0 text-accent-bright">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+          </span>
+        </button>
       </div>
-    </dialog>
+
+      {/* Caption rail. Always visible on touch, where there is no hover. */}
+      <figcaption
+        className={cn(
+          "mt-5 flex flex-col gap-3 sm:flex-row sm:items-baseline sm:gap-6",
+          frame.span === "inset" && "sm:mt-6",
+          isHalf && "sm:col-start-2 sm:mt-0 sm:self-end sm:pb-2 sm:pl-0",
+        )}
+      >
+        <div className="flex items-baseline gap-4">
+          <span className="micro text-accent">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="micro text-muted-foreground">{frame.meta}</span>
+        </div>
+
+        <p className="max-w-md text-pretty leading-snug text-foreground-soft">
+          {frame.caption}
+        </p>
+
+        {frame.note ? (
+          <p className="hidden text-pretty text-sm italic leading-snug text-muted-foreground lg:ml-auto lg:max-w-xs lg:text-right">
+            {frame.note}
+          </p>
+        ) : null}
+      </figcaption>
+    </figure>
   );
-}
-
-/**
- * Keeps a native dialog in sync with its `open` prop.
- *
- * `showModal()` gives focus trapping, Escape handling and inertness of the rest of
- * the page without hand-rolling any of it. This component is only rendered while
- * the lightbox is open, so `open` is always true here.
- */
-function useModalDialog(open: boolean) {
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    // Drive the dialog from the `open` prop rather than opening on mount: the
-    // parent owns the state, and an unconditional showModal on mount would leave
-    // the dialog stuck open if the parent unmounted it for any other reason.
-    if (open && !node.open) node.showModal();
-    if (!open && node.open) node.close();
-  }, [open]);
-
-  return ref;
 }

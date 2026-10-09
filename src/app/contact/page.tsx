@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/page-hero";
+import { ContactHero } from "@/components/hero/contact-hero";
 import { Container } from "@/components/layout/container";
 import { ContactForm } from "@/components/contact/contact-form";
 import { ContactDetails, ContactFaq } from "@/components/contact/contact-details";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
   openGraph: {
     title: `Contact — ${siteConfig.name}`,
-    description: "The door is on Queen Street. Here is when it is open, and how to reach us.",
+    description: "The door is on Queen Street West. Here is when it is open, and how to reach us.",
     url: "/contact",
   },
 };
@@ -19,18 +19,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Get in touch"
-        title="Contact"
-        lede="The door is on Queen Street West. Ask for the counter, not a manager — the person who pulls your coffee is the person who will answer."
-        image="/images/space-counter.jpg"
-        imageAlt="A barista working behind a white brick counter."
-        meta={[
-          { label: "Reply within", value: "2 working days" },
-          { label: "Kitchen until", value: "15:00" },
-          { label: "Last pour", value: "Close − 30 min" },
-        ]}
-      />
+      <ContactHero />
 
       <Container className="py-16 sm:py-20 lg:py-24">
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-20">

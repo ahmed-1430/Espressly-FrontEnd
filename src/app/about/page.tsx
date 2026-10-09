@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/page-hero";
+import { AboutHero } from "@/components/hero/about-hero";
 import { AboutStory } from "@/components/about/about-story";
 import { AboutValues } from "@/components/about/about-values";
 import { AboutTeam } from "@/components/about/about-team";
@@ -20,20 +20,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Since 2019"
-        title="About Us"
-        lede="We are a small coffee house on Queen Street that never quite finished opening. Three years later it is still the same idea: one blend, roasted on site, in a room built for staying."
-        image="/images/craft-machine.jpg"
-        imageAlt="A chrome espresso machine on a brew bar, its buttons catching the light."
-        meta={[
-          { label: "Founded", value: String(siteConfig.founded) },
-          { label: "Baristas", value: "9" },
-          { label: "Blends tried", value: "11" },
-          { label: "Roasted", value: "On site" },
-        ]}
-      />
-
+      <AboutHero />
       <AboutStory />
       <AboutTeam />
       <AboutValues />

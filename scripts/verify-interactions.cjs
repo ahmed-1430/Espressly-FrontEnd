@@ -74,37 +74,74 @@ const check = (label, ok, detail = "") => {
     await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
     await page.goto(baseUrl + "/", { waitUntil: "domcontentloaded" });
 
-    const closed = await page.evaluate(() => {
-      const panel = document.querySelector('[role="dialog"]');
-      return panel ? getComputedStyle(panel).clipPath : null;
-    });
-    check("menu panel starts closed", /100%/.test(closed ?? ""), String(closed));
+    // The panel is mounted only while open, so "closed" means no dialog at all.
+    // Asserting on a clip-path would only be valid for the old always-mounted
+    // implementation and would pass vacuously against this one.
+    const closed = await page.evaluate(() => ({
+      dialog: !!document.querySelector('[role="dialog"]'),
+      expanded: document
+        .querySelector('button[aria-controls="mobile-navigation"]')
+        ?.getAttribute("aria-expanded"),
+    }));
+    check("menu panel starts closed", !closed.dialog, JSON.stringify(closed));
+    check("trigger starts collapsed", closed.expanded === "false", String(closed.expanded));
 
     await page.click('button[aria-controls="mobile-navigation"]');
     await new Promise((r) => setTimeout(r, 800));
 
     const open = await page.evaluate(() => ({
-      clip: getComputedStyle(document.querySelector('[role="dialog"]')).clipPath,
+      dialog: !!document.querySelector('[role="dialog"]'),
       bodyOverflow: document.body.style.overflow,
       expanded: document
         .querySelector('button[aria-controls="mobile-navigation"]')
         ?.getAttribute("aria-expanded"),
       focusInside: !!document.querySelector('[role="dialog"]')?.contains(document.activeElement),
+      // The explicit close control must be a real, reachable button.
+      closeButton: !!document.querySelector('[role="dialog"] button'),
     }));
-    check("menu opens", !/100%/.test(open.clip), open.clip);
+    check("menu opens", open.dialog, JSON.stringify(open));
     check("menu locks page scroll", open.bodyOverflow === "hidden", open.bodyOverflow);
     check("menu marks expanded", open.expanded === "true", String(open.expanded));
     check("focus moves into menu", open.focusInside);
+    check("panel has a close control", open.closeButton);
+
+    // Background scrolling must actually be blocked, not merely requested.
+    // Driven with a real wheel gesture: `window.scrollBy` is programmatic and
+    // is not what `overflow: hidden` is there to stop, so asserting on it would
+    // fail against a perfectly working lock.
+    const scrollHeld = await page.evaluate(() => window.scrollY);
+    await page.mouse.move(195, 500);
+    await page.mouse.wheel({ deltaY: 900 });
+    await new Promise((r) => setTimeout(r, 600));
+    const scrollAfter = await page.evaluate(() => window.scrollY);
+    check("background scroll is blocked", scrollAfter === scrollHeld,
+      `${scrollHeld} -> ${scrollAfter}`);
 
     await page.keyboard.press("Escape");
-    await new Promise((r) => setTimeout(r, 800));
+
+    // The panel unmounts through its exit animation, so it is still in the DOM
+    // briefly after Escape — that presence is the point of AnimatePresence.
+    // Wait for the node to actually detach rather than guessing a duration.
+    const detached = await page
+      .waitForFunction(() => !document.querySelector('[role="dialog"]'), { timeout: 3000 })
+      .then(() => true)
+      .catch(() => false);
 
     const afterClose = await page.evaluate(() => ({
-      clip: getComputedStyle(document.querySelector('[role="dialog"]')).clipPath,
+      dialog: !!document.querySelector('[role="dialog"]'),
       bodyOverflow: document.body.style.overflow,
+      expanded: document
+        .querySelector('button[aria-controls="mobile-navigation"]')
+        ?.getAttribute("aria-expanded"),
+      // Focus must return to the trigger that opened the panel.
+      focusOnTrigger:
+        document.activeElement ===
+        document.querySelector('button[aria-controls="mobile-navigation"]'),
     }));
-    check("Escape closes menu", /100%/.test(afterClose.clip), afterClose.clip);
-    check("scroll lock released", afterClose.bodyOverflow !== "hidden");
+    check("Escape closes menu", detached && !afterClose.dialog, JSON.stringify(afterClose));
+    check("trigger collapses again", afterClose.expanded === "false", String(afterClose.expanded));
+    check("scroll lock released", afterClose.bodyOverflow !== "hidden", afterClose.bodyOverflow);
+    check("focus returns to trigger", afterClose.focusOnTrigger);
 
     await page.close();
   }
@@ -159,22 +196,32 @@ const check = (label, ok, detail = "") => {
     await new Promise((r) => setTimeout(r, 900));
 
     const opened = await page.evaluate(() => {
-      const dlg = document.querySelector("dialog");
-      return { open: dlg?.open ?? false, counter: dlg?.querySelector(".micro")?.textContent.trim() };
+      const dlg = document.querySelector('[role="dialog"][aria-modal="true"]');
+      return {
+        open: !!dlg,
+        counter: dlg?.querySelector(".micro")?.textContent.trim(),
+        scrollLocked: document.body.style.overflow === "hidden",
+      };
     });
     check("lightbox opens", opened.open, JSON.stringify(opened));
+    check("lightbox locks page scroll", opened.scrollLocked, String(opened.scrollLocked));
 
     await page.keyboard.press("ArrowRight");
     await new Promise((r) => setTimeout(r, 600));
     const stepped = await page.evaluate(
-      () => document.querySelector("dialog .micro")?.textContent.trim(),
+      () =>
+        document.querySelector('[role="dialog"][aria-modal="true"] .micro')?.textContent.trim(),
     );
     check("arrow key advances", stepped !== opened.counter, `${opened.counter} -> ${stepped}`);
 
     await page.keyboard.press("Escape");
     await new Promise((r) => setTimeout(r, 600));
-    const closed = await page.evaluate(() => document.querySelector("dialog")?.open ?? false);
-    check("Escape closes lightbox", closed === false);
+    const closed = await page.evaluate(() => ({
+      open: !!document.querySelector('[role="dialog"][aria-modal="true"]'),
+      overflow: document.body.style.overflow,
+    }));
+    check("Escape closes lightbox", !closed.open, JSON.stringify(closed));
+    check("lightbox scroll lock released", closed.overflow !== "hidden", closed.overflow);
 
     await page.close();
   }

@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/cn";
@@ -14,15 +15,20 @@ import { useScrolled } from "@/hooks/use-scrolled";
 /**
  * Site navigation.
  *
- * Transparent over a hero, then transitioning to a glass bar once scrolled. The
- * bar hides on fast downward scroll and returns immediately on any upward
- * movement, so it never traps the viewport but never gets in the way either.
+ * Transparent over a hero, transitioning to a glass bar once scrolled. The bar
+ * retracts on sustained downward scroll and returns on any upward movement, so
+ * it never traps the viewport but never gets in the way either.
+ *
+ * The active-route indicator is a single element that slides between items via
+ * Motion's shared-layout animation, rather than each link drawing its own
+ * underline — so the mark travels between routes instead of blinking.
  */
-export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
+export function Navbar() {
   const pathname = usePathname();
   const scrolled = useScrolled(40);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let last = window.scrollY;
@@ -34,7 +40,7 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
         frame = 0;
         const y = window.scrollY;
         // Only meaningful past the fold, so the bar never flickers near the top.
-        const goingDown = y > last && y > 260;
+        const goingDown = y > last && y > 320;
         setHidden(goingDown && !menuOpen);
         last = y;
       });
@@ -51,25 +57,36 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   const solid = scrolled || menuOpen;
-  const onParchment = tone === "parchment" && !solid;
 
   return (
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-[100] transition-[transform,background-color,border-color,backdrop-filter] duration-500 ease-[var(--ease-out-expo)]",
+          "fixed inset-x-0 top-0 z-[100] transition-[transform,background-color,border-color] duration-500 ease-[var(--ease-out-expo)]",
           hidden && !menuOpen && "-translate-y-full",
-          solid
-            ? "glass-dark"
-            : "border-b border-transparent bg-transparent",
+          solid ? "glass-dark" : "border-b border-transparent bg-transparent",
         )}
-        style={{ transitionProperty: "transform, background-color, border-color" }}
       >
-        <Container className="flex h-16 items-center justify-between gap-6 lg:h-[76px]">
+        {/*
+          A top-down scrim while the bar is still transparent.
+
+          Several heroes open on a bright photograph — the gallery's bulb wall is
+          the worst case — and muted nav labels over that are unreadable. The
+          gradient is subtle enough to be invisible on the dark heroes and is
+          removed entirely once the glass bar takes over.
+        */}
+        <span
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-0 bg-linear-to-b from-background-sunken/85 via-background-sunken/35 to-transparent transition-opacity duration-500",
+            solid ? "opacity-0" : "opacity-100",
+          )}
+        />
+        <Container className="relative flex h-16 items-center justify-between gap-6 lg:h-[76px]">
           <Link
             href="/"
             aria-label={`${siteConfig.name} — home`}
-            className="group relative z-[110] -m-2 p-2"
+            className="relative z-[110] -m-2 shrink-0 p-2"
           >
             <Image
               src="/brand/espressly-logo-cream.png"
@@ -78,28 +95,27 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
               height={239}
               priority
               className={cn(
-                "w-auto transition-[height,opacity] duration-500 ease-[var(--ease-out-expo)]",
-                solid ? "h-5 lg:h-[22px] opacity-100" : "h-6 lg:h-[26px] opacity-100",
+                "w-auto transition-[height] duration-500 ease-[var(--ease-out-expo)]",
+                solid ? "h-5 lg:h-[22px]" : "h-6 lg:h-[26px]",
               )}
             />
           </Link>
 
           <nav aria-label="Primary" className="hidden lg:block">
-            <ul className="flex items-center gap-9">
+            <ul className="flex items-center gap-8">
               {navigation.map((link) => (
                 <li key={link.href}>
                   <NavLink
                     href={link.href}
                     label={link.label}
                     active={isActive(link.href)}
-                    onParchment={onParchment}
                   />
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/shop"
               className={cn(
@@ -121,29 +137,15 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
             </Link>
 
             <button
+              ref={triggerRef}
               type="button"
-              onClick={() => setMenuOpen((open) => !open)}
+              onClick={() => setMenuOpen(true)}
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
-              className="group relative z-[110] -mr-2 flex h-11 w-11 flex-col items-center justify-center gap-[7px] p-2 lg:hidden"
+              className="-mr-2 flex h-11 w-11 items-center justify-center text-foreground transition-opacity duration-300 lg:hidden"
             >
-              <span className="sr-only">
-                {menuOpen ? "Close menu" : "Open menu"}
-              </span>
-              <span
-                aria-hidden
-                className={cn(
-                  "h-px w-7 bg-foreground transition-transform duration-500 ease-[var(--ease-out-expo)]",
-                  menuOpen && "translate-y-[4px] rotate-45",
-                )}
-              />
-              <span
-                aria-hidden
-                className={cn(
-                  "h-px w-7 bg-foreground transition-transform duration-500 ease-[var(--ease-out-expo)]",
-                  menuOpen && "-translate-y-[4px] -rotate-45",
-                )}
-              />
+              <span className="sr-only">Open menu</span>
+              <MenuIcon className="h-5 w-5" />
             </button>
           </div>
         </Container>
@@ -151,7 +153,12 @@ export function Navbar({ tone = "dark" }: { tone?: "dark" | "parchment" }) {
 
       <MobileMenu
         open={menuOpen}
-        onClose={() => setMenuOpen(false)}
+        onClose={() => {
+          setMenuOpen(false);
+          // The panel restores focus itself; this keeps the trigger reachable for
+          // the case where the panel unmounted before focus could be returned.
+          requestAnimationFrame(() => triggerRef.current?.focus());
+        }}
         pathname={pathname}
       />
     </>
@@ -162,36 +169,55 @@ function NavLink({
   href,
   label,
   active,
-  onParchment,
 }: {
   href: string;
   label: string;
   active: boolean;
-  onParchment: boolean;
 }) {
+  const reduce = useReducedMotion();
+
   return (
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "group relative block py-2 text-[0.6875rem] font-medium uppercase tracking-[0.2em] transition-colors duration-300",
-        onParchment
-          ? active
-            ? "text-ink-espresso"
-            : "text-ink-espresso-soft hover:text-ink-espresso"
-          : active
-            ? "text-foreground"
-            : "text-muted-foreground hover:text-foreground",
+        "relative block px-1 py-2 text-[0.6875rem] font-medium uppercase tracking-[0.2em] transition-colors duration-300",
+        active
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       {label}
-      <span
-        aria-hidden
-        className={cn(
-          "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-accent transition-transform duration-500 ease-[var(--ease-out-expo)]",
-          active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
-        )}
-      />
+      {active ? (
+        // One shared element, so the mark slides between routes.
+        <motion.span
+          layoutId="nav-active"
+          aria-hidden
+          className="absolute inset-x-0 -bottom-0.5 h-px bg-accent"
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 420, damping: 34, mass: 0.7 }
+          }
+        />
+      ) : null}
     </Link>
+  );
+}
+
+/** Hamburger glyph: two hairlines, matching the close mark's stroke weight. */
+function MenuIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 16"
+      fill="none"
+      className={className}
+      stroke="currentColor"
+      strokeWidth="1.2"
+      vectorEffect="non-scaling-stroke"
+    >
+      <path d="M0 4h24M0 12h16" />
+    </svg>
   );
 }

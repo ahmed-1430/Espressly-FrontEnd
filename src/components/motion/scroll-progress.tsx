@@ -1,76 +1,67 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-type Props = {
-  /** Stay hidden until the page has scrolled this far. */
-  threshold?: number;
-};
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 /**
- * Scroll progress indicator.
+ * Reading progress indicator.
  *
- * A one-pixel rule that fills from the left as the page scrolls, pinned under the
- * navigation. It gives long editorial pages a sense of position without adding a
- * persistent floating widget, and it updates on rAF rather than on scroll events.
+ * A hairline pinned to the very top edge of the viewport, above all content,
+ * filling left to right as the page is read.
+ *
+ * Two decisions worth recording:
+ *
+ * It is driven by a ScrollTrigger rather than a scroll listener. ScrollTrigger
+ * fires from the same ticker as GSAP, and `SmoothScroll` forwards Lenis's
+ * interpolated position into that ticker — so the bar tracks the position the
+ * page is *visually* at, not the position the native scroller has already been
+ * told about. With a raw listener the bar visibly lags the content on fast
+ * momentum scrolls.
+ *
+ * `fastScrollEnd` ends the progress at the last scrollable pixel rather than at
+ * the bottom of the document, which is where a naive ratio would stop short.
  */
-export function ScrollProgress({ threshold = 0 }: Props) {
+export function ScrollProgress() {
   const barRef = useRef<HTMLDivElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const bar = barRef.current;
-    const wrap = wrapRef.current;
-    if (!bar || !wrap) return;
+    if (!bar) return;
 
-    let frame = 0;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const update = () => {
-      const doc = document.documentElement;
-      const scrollable = doc.scrollHeight - window.innerHeight;
-      const y = window.scrollY;
-
-      if (scrollable <= 0) {
-        bar.style.transform = "scaleX(0)";
-        wrap.style.opacity = "0";
-        return;
-      }
-
-      // Short pages have nowhere to go, so the rule stays out of the way.
-      wrap.style.opacity = y > threshold ? "1" : "0";
-      const ratio = Math.min(1, Math.max(0, y / scrollable));
-      bar.style.transform = `scaleX(${ratio.toFixed(4)})`;
-    };
-
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        update();
+    const context = gsap.context(() => {
+      gsap.to(bar, {
+        scaleX: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: document.documentElement,
+          start: "top top",
+          // Resolves to the maximum scrollable offset, so the bar completes
+          // exactly as the last content reaches the top of the viewport.
+          end: () =>
+            ScrollTrigger.maxScroll(window) > 0
+              ? ScrollTrigger.maxScroll(window)
+              : document.documentElement.scrollHeight - window.innerHeight,
+          scrub: reduce ? true : 0.35,
+          invalidateOnRefresh: true,
+        },
       });
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    });
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
+      context.revert();
     };
-  }, [threshold]);
+  }, []);
 
   return (
     <div
-      ref={wrapRef}
       aria-hidden
-      className="fixed inset-x-0 top-16 z-[99] h-px opacity-0 transition-opacity duration-500 lg:top-[76px]"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[140] h-px"
     >
       <div
         ref={barRef}
-        className="h-full origin-left bg-accent will-change-transform"
-        style={{ transform: "scaleX(0)" }}
+        className="h-full w-full origin-left scale-x-0 bg-linear-to-r from-accent-deep via-accent to-accent-bright will-change-transform"
       />
     </div>
   );

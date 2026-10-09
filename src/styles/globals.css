@@ -20,6 +20,16 @@
   initial-value: 100%;
 }
 
+/*
+ * Gallery frame reveal. Registered so the percentage interpolates; unregistered
+ * custom properties jump between values rather than animating.
+ */
+@property --frame-reveal {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
 :root {
   /* --- surface --- */
   --background: #14100d;
@@ -358,6 +368,36 @@
 
   .hairline-draw.is-revealed {
     transform: scaleX(1);
+  }
+
+  /* --- hero system ------------------------------------------------------ */
+  /* Hero media masks open from the bottom edge. Driven by the `data-hero`
+     attribute rather than a class so the entrance timeline and the CSS state
+     cannot disagree about whether a frame has arrived. */
+  .hero-media[data-hero="pending"] {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 62%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 62%,
+      transparent 100%
+    );
+    transform: scale(1.06);
+  }
+
+  .hero-media[data-hero="revealed"] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 100%, #000 100%);
+    mask-image: linear-gradient(to bottom, #000 100%, #000 100%);
+    transform: scale(1);
+    transition:
+      -webkit-mask-image 1.4s var(--ease-out-expo),
+      mask-image 1.4s var(--ease-out-expo),
+      transform 1.8s var(--ease-out-expo);
   }
 
   /* Underline sweep for editorial links inside body copy. */

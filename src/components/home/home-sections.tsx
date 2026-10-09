@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { RevealImage } from "@/components/motion/reveal-image";
 import { TextLink } from "@/components/ui/text-link";
 import { SplitLines } from "@/components/motion/split-lines";
+import { cn } from "@/lib/cn";
 
 const milestones = [
   {
@@ -344,28 +345,39 @@ export function MenuPreview() {
 /**
  * Atmosphere preview.
  *
- * A deliberately non-uniform composition: one large portrait, one wide landscape,
- * and two smaller squares at different heights. Authored offsets stop it reading
- * as a generic grid.
+ * A deliberately non-uniform composition: one large portrait anchor with two
+ * landscape frames stacked beside it. Six tracks rather than four because three
+ * frames in a four-column grid leaves a hole.
+ *
+ * The arrangement only begins at `lg`. Any multi-column grid earlier gives each
+ * tile too little width to read as photography — four columns at `sm` measured
+ * 164px per tile at 768px, and two columns measured 200px. Below `lg` the frames
+ * stack full-bleed instead, which is the better answer on a narrow screen
+ * anyway.
+ *
+ * Only the anchor drops its aspect ratio at `lg`. The two stacked frames must
+ * keep theirs: `grid-rows-2` resolves to `repeat(2, minmax(0, 1fr))`, and with no
+ * intrinsic content height those tracks collapse to zero. The anchor spans both
+ * rows, so it inherits their sum without needing a ratio of its own.
  */
 export function AtmospherePreview() {
   const frames = [
     {
       src: "/images/space-garden.jpg",
       alt: "A cafe interior filled with hanging plants beneath a glass roof.",
-      className: "aspect-4/5 sm:col-span-2 sm:row-span-2 sm:aspect-auto",
+      className: "aspect-4/5 lg:col-span-3 lg:row-span-2 lg:aspect-auto",
       caption: "The long room, midday",
     },
     {
       src: "/images/craft-pour.jpg",
       alt: "Steamed milk poured into a cup, forming a rosetta in the crema.",
-      className: "aspect-4/3 sm:aspect-16/10",
+      className: "aspect-4/3 lg:col-span-3 lg:aspect-16/10",
       caption: "Rosetta, pulled twice",
     },
     {
       src: "/images/food-viennoiserie.jpg",
-      alt: "A dark board of croissants and pastries lit from one side.",
-      className: "aspect-4/3 sm:aspect-16/10 lg:translate-y-10",
+      alt: "A chilled display case of croissants and pastries arranged on shelves inside the café.",
+      className: "aspect-4/3 lg:col-span-3 lg:aspect-16/10 lg:translate-y-10",
       caption: "Out of the oven at 06:30",
     },
   ] as const;
@@ -411,20 +423,28 @@ export function AtmospherePreview() {
         <Reveal
           stagger={0.12}
           margin="-5% 0px -5% 0px"
-          className="mt-16 grid gap-4 sm:grid-cols-4 sm:grid-rows-2 lg:mt-20"
+          className="mt-16 grid gap-4 lg:mt-20 lg:grid-cols-6 lg:grid-rows-2"
         >
           {frames.map((frame) => (
-            <figure key={frame.src} className={frame.className}>
-              <div className="relative h-full w-full overflow-hidden bg-background-raised">
+            <figure
+              key={frame.src}
+              className={cn("flex flex-col", frame.className)}
+            >
+              {/*
+                `flex-1` rather than `h-full`: the caption is a sibling inside the
+                same figure, so a full-height image box plus the caption overflows
+                the row the figure is stretched into.
+              */}
+              <div className="relative min-h-0 flex-1 overflow-hidden bg-background-raised">
                 <Image
                   src={frame.src}
                   alt={frame.alt}
                   fill
-                  sizes="(max-width: 640px) 100vw, 50vw"
+                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 40vw"
                   className="object-cover transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] hover:scale-[1.04]"
                 />
               </div>
-              <figcaption className="micro mt-3 text-muted-foreground">
+              <figcaption className="micro mt-3 shrink-0 text-muted-foreground">
                 {frame.caption}
               </figcaption>
             </figure>

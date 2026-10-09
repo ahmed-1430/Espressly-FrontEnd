@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger, motion, prefersReducedMotion } from "@/lib/gsap";
+import { gsap, ScrollTrigger, motionPresets, prefersReducedMotion } from "@/lib/gsap";
 import { location, siteConfig } from "@/config/site";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function HomeHero() {
 
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline({
-        defaults: { ease: motion.ease.out, duration: motion.duration.slow },
+        defaults: { ease: motionPresets.ease.out, duration: motionPresets.duration.slow },
       });
 
       timeline

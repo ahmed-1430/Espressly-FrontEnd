@@ -4,20 +4,26 @@ export type GalleryFrame = {
   readonly alt: string;
   readonly caption: string;
   /**
-   * Editorial placement. Wide frames span the full grid, tall frames occupy a
-   * narrow column, and standard frames fill a single cell. The layout is authored
-   * rather than random so the page reads like a spread, not a masonry dump.
+   * Placement within an authored spread.
+   *
+   * `full`  — spans the whole column, breaks the grid
+   * `half`  — one of a pair
+   * `inset` — deliberately narrow, set against whitespace
+   * `tall`  — portrait, drops down the page
    */
-  readonly span: "wide" | "tall" | "standard";
+  readonly span: "full" | "half" | "inset" | "tall";
   readonly meta: string;
+  /** Optional editorial note shown beside the frame on wide viewports. */
+  readonly note?: string;
 };
 
 /**
  * The gallery set.
  *
- * Alt text describes what is actually in each frame. It was written against the
- * photographs rather than against the captions, which is why some captions name
- * a moment that the image cannot show.
+ * Ordered as a sequence of spreads rather than a grid to be filled: each entry
+ * declares how it sits, and negative space is part of the composition. Alt text
+ * describes what is actually in each frame — it was written against the
+ * photographs, not against the captions.
  */
 export const galleryFrames: readonly GalleryFrame[] = [
   {
@@ -25,15 +31,16 @@ export const galleryFrames: readonly GalleryFrame[] = [
     src: "/images/hero-primary.jpg",
     alt: "A hand holding a white ceramic cup as steam rises through warm morning light.",
     caption: "07:02 — first cup, before the shutters go up.",
-    span: "wide",
+    span: "full",
     meta: "Bar · Morning",
+    note: "The hour the room is built for.",
   },
   {
     id: "espresso-pull",
     src: "/images/craft-pour.jpg",
     alt: "Steamed milk poured into a cup, forming a rosetta in the crema.",
     caption: "The last cup of the morning rush, poured slowly.",
-    span: "standard",
+    span: "half",
     meta: "Craft · Pour",
   },
   {
@@ -41,80 +48,66 @@ export const galleryFrames: readonly GalleryFrame[] = [
     src: "/images/craft-origin.jpg",
     alt: "Two hands cupped around a large quantity of freshly roasted coffee beans.",
     caption: "Wednesday's roast, cooling on the bench.",
-    span: "standard",
+    span: "half",
     meta: "Roast · Green",
   },
   {
     id: "machine-detail",
-    src: "/images/craft-machine.jpg",
-    alt: "The chrome face of an espresso machine lit warmly from behind.",
+    src: "/images/editorial-sign.jpg",
+    alt: "Two portafilters and ground coffee laid out on a worn wooden board.",
     caption: "Three groups, calibrated every morning at seven.",
-    span: "tall",
+    span: "inset",
     meta: "Equipment",
   },
   {
     id: "counter-dark",
-    src: "/images/hero-counter.jpg",
-    alt: "A long bar counter lined with bottles and hanging lights, lit in amber.",
+    src: "/images/bar-cortado.jpg",
+    alt: "A cup standing on a hessian cloth with coffee beans spilled around it.",
     caption: "After eight, the room turns to this.",
-    span: "wide",
+    span: "full",
     meta: "Bar · Evening",
-  },
-  {
-    id: "viennoiserie",
-    src: "/images/food-viennoiserie.jpg",
-    alt: "A dark wooden board of croissants, danishes and pastries lit from one side.",
-    caption: "Thirty-six hour lamination. Baked twice daily.",
-    span: "standard",
-    meta: "Kitchen",
-  },
-  {
-    id: "seating-room",
-    src: "/images/space-seating.jpg",
-    alt: "A cafe interior with rattan chairs, plants and tables under a glazed roof.",
-    caption: "The long table runs the length of the room.",
-    span: "standard",
-    meta: "Room · Day",
-  },
-  {
-    id: "window-seat",
-    src: "/images/space-window.jpg",
-    alt: "A wooden table by a window with a notebook, sunglasses and a small coffee.",
-    caption: "Window seats go quiet after three.",
-    span: "standard",
-    meta: "Room · Afternoon",
+    note: "Nine in the evening, and nobody has turned the lights up.",
   },
   {
     id: "beans-close",
     src: "/images/product-beans.jpg",
     alt: "Roasted coffee beans filling the frame in a dense macro texture.",
     caption: "Roasted to first crack plus ninety seconds.",
-    span: "wide",
+    span: "half",
     meta: "Detail",
   },
   {
-    id: "bakery-case",
-    src: "/images/food-counter.jpg",
-    alt: "A chilled display case of pastries arranged on shelves inside the cafe.",
-    caption: "Everything in the case is made here.",
-    span: "standard",
+    id: "viennoiserie",
+    src: "/images/food-viennoiserie.jpg",
+    alt: "A chilled display case of croissants and pastries arranged on shelves inside the café.",
+    caption: "Thirty-six hour lamination. Baked twice daily.",
+    span: "half",
     meta: "Kitchen",
   },
   {
-    id: "garden-room",
-    src: "/images/space-garden.jpg",
-    alt: "A cafe interior filled with hanging plants beneath a glazed roof.",
-    caption: "Plants we have outlived. Two, so far.",
-    span: "wide",
-    meta: "Room · Day",
+    id: "window-seat",
+    src: "/images/space-window.jpg",
+    alt: "A window-side table with a notebook, printed matter and a half-finished coffee.",
+    caption: "Window seats go quiet after three.",
+    span: "inset",
+    meta: "Room · Afternoon",
   },
   {
-    id: "cold-brew",
-    src: "/images/cold-brew.jpg",
-    alt: "A tall glass of iced coffee with ice and a layer of cream through the middle.",
-    caption: "Eighteen hours, no heat at any point.",
-    span: "standard",
-    meta: "Cold",
+    id: "seating-room",
+    src: "/images/space-seating.jpg",
+    alt: "A cafe interior with rattan chairs, plants and tables under a glazed roof.",
+    caption: "The long table runs the length of the room.",
+    span: "full",
+    meta: "Room · Day",
+    note: "Fourteen seats, one of them informally reserved.",
+  },
+  {
+    id: "pourover",
+    src: "/images/bar-pourover.jpg",
+    alt: "Two lattes with rosetta art on a round wooden board, surrounded by dark leaves.",
+    caption: "Three ways to taste the same coffee.",
+    span: "half",
+    meta: "Filter",
   },
   {
     id: "beans-flying",
@@ -125,58 +118,60 @@ export const galleryFrames: readonly GalleryFrame[] = [
     meta: "Roast",
   },
   {
-    id: "pourover",
-    src: "/images/bar-pourover.jpg",
-    alt: "Two lattes with rosetta art on a round wooden board, surrounded by dark leaves.",
-    caption: "Three ways to taste the same coffee.",
-    span: "standard",
-    meta: "Filter",
+    id: "cold-brew",
+    src: "/images/cold-brew.jpg",
+    alt: "A tall glass of iced coffee with ice and a layer of cream through the middle.",
+    caption: "Eighteen hours, no heat at any point.",
+    span: "half",
+    meta: "Cold",
   },
   {
-    id: "counter-view",
-    src: "/images/space-counter.jpg",
-    alt: "A barista working behind a white brick counter lined with shelves and stock.",
-    caption: "Seven in the morning, before the room fills.",
-    span: "wide",
-    meta: "Bar · Morning",
+    id: "bakery-case",
+    src: "/images/food-croissant.jpg",
+    alt: "Two croissants on a dark bench with flour still falling around them.",
+    caption: "Laminated at four in the morning. Out of the oven at seven.",
+    span: "half",
+    meta: "Pastry",
   },
   {
-    id: "brew-station",
-    src: "/images/hero-bar.jpg",
-    alt: "A brew bar of grinders and an espresso machine under warm pendant lights.",
-    caption: "Three groups, two grinders, one shot at a time.",
-    span: "standard",
-    meta: "Equipment",
+    id: "garden-room",
+    src: "/images/space-garden.jpg",
+    alt: "A cafe interior filled with hanging plants beneath a glazed roof.",
+    caption: "Plants we have outlived. Two, so far.",
+    span: "full",
+    meta: "Room · Day",
+    note: "The skylight is the only thing in the room we did not plan.",
   },
   {
     id: "menu-board",
     src: "/images/space-menu.jpg",
     alt: "A cafe chalkboard menu on a concrete wall, with bicycles parked beneath it.",
     caption: "Everything is priced on a card you can read standing up.",
-    span: "standard",
+    span: "inset",
     meta: "Room",
+  },
+  {
+    id: "brew-station",
+    src: "/images/hero-bar.jpg",
+    alt: "The service counter and refrigerated display case, with the kitchen beyond.",
+    caption: "Three groups, two grinders, one shot at a time.",
+    span: "half",
+    meta: "Equipment",
   },
   {
     id: "street-front",
     src: "/images/space-street.jpg",
     alt: "A cafe terrace on a cobbled street with an A-board menu on the pavement.",
     caption: "The A-board goes out when the weather allows.",
-    span: "standard",
+    span: "half",
     meta: "Frontage",
   },
   {
-    id: "sign",
-    src: "/images/editorial-sign.jpg",
-    alt: "Two portafilters and ground coffee laid out on a dark timber bench.",
-    caption: "Dialed in twice a day, and logged both times.",
+    id: "counter-view",
+    src: "/images/space-counter.jpg",
+    alt: "A barista working behind a white brick counter lined with shelves and stock.",
+    caption: "Seven in the morning, before the room fills.",
     span: "tall",
-    meta: "Craft",
+    meta: "Bar · Morning",
   },
 ];
-
-export const homeGalleryFrames = [
-  galleryFrames[0],
-  galleryFrames[3],
-  galleryFrames[6],
-  galleryFrames[9],
-] as const;

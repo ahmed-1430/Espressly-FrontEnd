@@ -16,10 +16,13 @@ gsap.registerPlugin(ScrollTrigger);
 export { gsap, ScrollTrigger };
 
 /**
- * Shared easing and duration vocabulary. Every timeline pulls from these so the
- * site moves with one voice instead of a dozen unrelated feels.
+ * Shared easing and duration vocabulary.
+ *
+ * Named `motionPresets` rather than `motion` to avoid colliding with the Motion
+ * library, which is imported elsewhere as `motion` from `motion/react`. Every
+ * timeline pulls from these so the site moves with one voice.
  */
-export const motion = {
+export const motionPresets = {
   ease: {
     /** Decelerating, expensive. Entrances. */
     out: "expo.out",
