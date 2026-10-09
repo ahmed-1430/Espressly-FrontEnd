@@ -33,6 +33,24 @@ export function ShopCatalogue() {
 
   return (
     <div>
+      {/*
+        Section heading. Without it the catalogue's product names were <h3>s
+        sitting directly under the hero's <h1>, skipping a level — and the
+        "See the range" action in the hero landed on an unlabelled grid.
+      */}
+      <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-[clamp(1.75rem,4vw,3rem)] tracking-display">
+            The range
+          </h2>
+          <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground">
+            Everything is roasted in the back room and dispatched within two
+            working days. Ordering is by enquiry, so nothing here is sitting in a
+            cart waiting to be forgotten.
+          </p>
+        </div>
+      </div>
+
       {/* Category rail */}
       <div className="flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div

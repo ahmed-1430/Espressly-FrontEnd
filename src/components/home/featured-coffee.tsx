@@ -101,14 +101,18 @@ export function FeaturedCoffee() {
                 <Image
                   key={drink.id}
                   src={drink.image}
-                  alt={drink.name}
+                  // Decorative: the drink's name and detail are rendered as text
+                  // directly beneath this frame, and the same names are listed in
+                  // the entries beside it. An alt here would announce the same
+                  // three names twice.
+                  alt=""
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className={cn(
                     "object-cover transition-opacity duration-700 ease-[var(--ease-out-expo)]",
                     index === active ? "opacity-100" : "opacity-0",
                   )}
-                  aria-hidden={index !== active}
+                  aria-hidden="true"
                 />
               ))}
               <div
