@@ -39,7 +39,7 @@ export const menuCategories: readonly MenuCategory[] = [
     id: "espresso",
     label: "Espresso",
     note: "Pulled on a three-group lever, calibrated every morning at seven.",
-    image: "/images/bar-espresso.jpg",
+    image: "/images/menu-flat-white.jpg",
   },
   {
     id: "signature",
@@ -96,6 +96,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 4.25,
     roast: "Dark",
     signature: true,
+    image: "/images/menu-espresso.jpg",
   },
   {
     id: "macchiato",
@@ -104,6 +105,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Espresso marked with a spoon of steamed milk. Nothing more.",
     unit: "ml",
     price: 4.75,
+    image: "/images/menu-macchiato.jpg",
   },
   {
     id: "cortado",
@@ -112,7 +114,8 @@ export const menuItems: readonly MenuItem[] = [
     description: "Equal parts espresso and warm milk in a 120 ml glass.",
     unit: "ml",
     price: 5.25,
-    image: "/images/bar-cortado.jpg",
+    image: "/images/menu-cortado.jpg",
+    
   },
   {
     id: "cappuccino",
@@ -133,6 +136,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 5.5,
     dietary: ["vegetarian", "contains-dairy"],
     signature: true,
+    image: "/images/menu-flat-white.jpg",
   },
   {
     id: "filter-shot",
@@ -143,6 +147,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.75,
     tasting:
       "Bitter and bright in equal measure. The tonic's quinine lifts the cocoa notes out of the blend and leaves the citrus on top.",
+    image: "/images/menu-filter-shot.jpg",
   },
   {
     id: "americano",
@@ -151,6 +156,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Double ristretto lengthened with hot water.",
     unit: "ml",
     price: 4.75,
+    image: "/images/menu-americano.jpg",
   },
   {
     id: "affogato",
@@ -186,6 +192,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.5,
     dietary: ["vegetarian", "contains-dairy"],
     tasting: "Floral and warm, closer to a spice than a sweetener.",
+    image: "/images/menu-cardamom-flat-white.jpg",
   },
   {
     id: "espresso-tonic-signature",
@@ -199,16 +206,6 @@ export const menuItems: readonly MenuItem[] = [
     image: "/images/cold-tonic.jpg",
   },
   {
-    id: "black-sesame-cortado",
-    category: "signature",
-    name: "Black Sesame Cortado",
-    description: "Toasted black sesame, milk, and a single ristretto shot.",
-    unit: "ml",
-    price: 6.95,
-    dietary: ["vegetarian", "contains-dairy"],
-    tasting: "Nutty and almost savoury. Not for everyone, which is fine.",
-  },
-  {
     id: "honey-oat-latte",
     category: "signature",
     name: "Honey Oat Latte",
@@ -216,6 +213,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6.25,
     dietary: ["vegan"],
+    image: "/images/menu-honey-oat-latte.jpg",
   },
   {
     id: "mocha-pot",
@@ -225,6 +223,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6.25,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/menu-mocha-pot.jpg",
   },
 
   // --- brewed ---
@@ -246,6 +245,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "House blend, ground coarse, brewed every forty minutes.",
     unit: "ml",
     price: 4.5,
+    image: "/images/menu-batch-filter.jpg",
   },
   {
     id: "batch-decaf",
@@ -254,6 +254,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Sugarcane decaf. Tastes like coffee, not like compromise.",
     unit: "ml",
     price: 4.75,
+    image: "/images/menu-batch-decaf.jpg",
   },
   {
     id: "french-press",
@@ -286,7 +287,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 5.75,
     signature: true,
     tasting: "Cocoa-heavy and almost impossibly smooth over ice.",
-    image: "/images/cold-brew.jpg",
+    image: "/images/menu-cold-brew.jpg",
   },
   {
     id: "cold-brew-nitro",
@@ -306,6 +307,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6.25,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/menu-iced-latte.jpg",
   },
   {
     id: "espresso-soda",
@@ -314,6 +316,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Ristretto, soda, ice, and a strip of orange.",
     unit: "ml",
     price: 6.75,
+    image: "/images/menu-espresso-soda.jpg",
   },
   {
     id: "cold-brew-bottle",
@@ -322,6 +325,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "Twelve-hour steep in the bottle. Take it home, or drink it here.",
     unit: "ml",
     price: 7.5,
+    image: "/images/menu-cold-brew-bottle.jpg",
   },
 
   // --- tea & matcha ---
@@ -354,6 +358,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 5.5,
     dietary: ["vegan", "gluten-free"],
+    image: "/images/tea-ceramic.jpg",
   },
   {
     id: "earl-grey",
@@ -406,6 +411,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "g",
     price: 6,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/menu-almond-pain.jpg",
   },
   {
     id: "cardamom-bun",
@@ -416,15 +422,6 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.5,
     dietary: ["vegetarian", "contains-dairy"],
     image: "/images/food-tray.jpg",
-  },
-  {
-    id: "canele",
-    category: "pastry",
-    name: "Canelé",
-    description: "Beeswax-lined copper, dark custard centre, thin shell.",
-    unit: "g",
-    price: 4.75,
-    dietary: ["vegetarian", "contains-dairy"],
   },
   {
     id: "olive-oil-cake",
@@ -476,6 +473,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "set",
     price: 15,
     dietary: ["vegan"],
+    image: "/images/menu-avo-toast.jpg",
   },
   {
     id: "eggs-any",
@@ -485,6 +483,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "set",
     price: 14,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/menu-eggs-any.jpg",
   },
   {
     id: "shakshuka",
@@ -514,6 +513,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "set",
     price: 13,
     dietary: ["vegetarian"],
+    image: "/images/menu-granola-bowl.jpg",
   },
   {
     id: "sourdough-plate",
@@ -537,6 +537,7 @@ export const menuItems: readonly MenuItem[] = [
     signature: true,
     dietary: ["vegan"],
     tasting: "Available November through March, and then it is gone for the year.",
+    image: "/images/menu-maple-oat.jpg",
   },
   {
     id: "pumpkin-spice",
@@ -547,6 +548,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.75,
     dietary: ["vegetarian", "contains-dairy"],
     tasting: "Autumn, decided in a kitchen rather than a marketing meeting.",
+    image: "/images/menu-pumpkin-spice.jpg",
   },
   {
     id: "gingerbread",
@@ -556,6 +558,7 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6.95,
     dietary: ["vegetarian", "contains-dairy"],
+    image: "/images/menu-gingerbread.jpg",
   },
   {
     id: "lavender-tonic",
@@ -564,6 +567,7 @@ export const menuItems: readonly MenuItem[] = [
     description: "House lavender cordial, tonic, ristretto.",
     unit: "ml",
     price: 7.25,
+    image: "/images/menu-lavender-tonic.jpg",
   },
 ] as const;
 

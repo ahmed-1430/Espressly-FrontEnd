@@ -1,0 +1,139 @@
+{
+ "queries": {
+  "item-espresso": "espresso shot glass",
+  "item-double-espresso": "double espresso cup",
+  "item-macchiato": "macchiato",
+  "item-cortado": "cortado coffee glass",
+  "item-cappuccino": "cappuccino foam saucer",
+  "item-latte": "latte cup table",
+  "item-flat-white": "flat white latte art",
+  "item-cold-brew": "cold brew glass ice",
+  "item-iced-latte": "iced latte glass ice",
+  "item-specialty": "specialty coffee latte art",
+  "item-matcha": "matcha latte",
+  "item-pastry": "pastry croissant plate",
+  "item-breakfast": "breakfast plate cafe",
+  "item-americano": "americano coffee cup",
+  "item-filter-shot": "filter coffee cup",
+  "item-cardamom": "cardamom latte",
+  "item-sesame-cortado": "cortado small coffee",
+  "item-honey-latte": "honey latte",
+  "item-mocha": "mocha chocolate coffee",
+  "item-batch-filter": "batch filter coffee",
+  "item-batch-decaf": "decaf coffee cup",
+  "item-espresso-soda": "coffee soda sparkling",
+  "item-cold-brew-bottle": "cold brew bottle",
+  "item-assam": "assam black tea cup",
+  "item-almond-pain": "almond croissant pain suisse",
+  "item-canele": "canele pastry",
+  "item-avo-toast": "avocado toast",
+  "item-eggs": "eggs any style plate",
+  "item-granola": "granola bowl yogurt",
+  "item-maple": "maple latte autumn",
+  "item-pumpkin": "pumpkin spice latte",
+  "item-gingerbread": "gingerbread latte",
+  "item-lavender": "lavender drink glass"
+ },
+ "results": {
+  "item-double-espresso": {
+   "error": "status 401"
+  },
+  "item-macchiato": {
+   "error": "status 401"
+  },
+  "item-espresso": {
+   "error": "status 401"
+  },
+  "item-cappuccino": {
+   "error": "status 401"
+  },
+  "item-cortado": {
+   "error": "status 401"
+  },
+  "item-latte": {
+   "error": "status 401"
+  },
+  "item-flat-white": {
+   "error": "status 401"
+  },
+  "item-cold-brew": {
+   "error": "status 401"
+  },
+  "item-iced-latte": {
+   "error": "status 401"
+  },
+  "item-specialty": {
+   "error": "status 401"
+  },
+  "item-pastry": {
+   "error": "status 401"
+  },
+  "item-matcha": {
+   "error": "status 401"
+  },
+  "item-breakfast": {
+   "error": "status 401"
+  },
+  "item-filter-shot": {
+   "error": "status 401"
+  },
+  "item-americano": {
+   "error": "status 401"
+  },
+  "item-cardamom": {
+   "error": "status 401"
+  },
+  "item-honey-latte": {
+   "error": "status 401"
+  },
+  "item-sesame-cortado": {
+   "error": "status 401"
+  },
+  "item-mocha": {
+   "error": "status 401"
+  },
+  "item-batch-filter": {
+   "error": "status 401"
+  },
+  "item-batch-decaf": {
+   "error": "status 401"
+  },
+  "item-espresso-soda": {
+   "error": "status 401"
+  },
+  "item-cold-brew-bottle": {
+   "error": "status 401"
+  },
+  "item-assam": {
+   "error": "status 401"
+  },
+  "item-almond-pain": {
+   "error": "status 401"
+  },
+  "item-canele": {
+   "error": "status 401"
+  },
+  "item-avo-toast": {
+   "error": "status 401"
+  },
+  "item-granola": {
+   "error": "status 401"
+  },
+  "item-eggs": {
+   "error": "status 401"
+  },
+  "item-maple": {
+   "error": "status 401"
+  },
+  "item-gingerbread": {
+   "error": "status 401"
+  },
+  "item-pumpkin": {
+   "error": "status 401"
+  },
+  "item-lavender": {
+   "error": "status 401"
+  }
+ },
+ "pool": []
+}

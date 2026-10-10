@@ -80,6 +80,35 @@ const MANIFEST = {
   "product-beans": { id: "1442550528053-c431ecb55509", width: 1400 },
   "product-scoop": { id: "1416879595882-3373a0480b5b", width: 1400 },
 
+  // --- menu items ---
+  // One frame per item, each reviewed against the photograph rather than
+  // against the item's name. Two items were cut from the menu rather than
+  // illustrated with a lookalike -- see scripts/promote-candidates.cjs.
+  "menu-espresso": { id: "photo-1674642387246-463a03b100be", width: 1200 },
+  "menu-macchiato": { id: "photo-1485808191679-5f86510681a2", width: 1200 },
+  "menu-cortado": { id: "photo-1563731649913-fab41907b535", width: 1200 },
+  "menu-latte": { id: "photo-1534687941688-651ccaafbff8", width: 1200 },
+  "menu-flat-white": { id: "photo-1668001178163-45a0badd1ef3", width: 1200 },
+  "menu-americano": { id: "photo-1510591509098-f4fdc6d0ff04", width: 1200 },
+  "menu-filter-shot": { id: "photo-1599837210403-1a17b48bfee2", width: 1200 },
+  "menu-cardamom-flat-white": { id: "photo-1495774856032-8b90bbb32b32", width: 1200 },
+  "menu-honey-oat-latte": { id: "photo-1582202737800-8ab9a8cc6e6a", width: 1200 },
+  "menu-mocha-pot": { id: "photo-1619286310410-a95de97b0aec", width: 1200 },
+  "menu-batch-filter": { id: "photo-1587955245893-389f2215c6eb", width: 1200 },
+  "menu-batch-decaf": { id: "photo-1582768772255-7fb8066357ce", width: 1200 },
+  "menu-cold-brew": { id: "photo-1642647391072-6a2416f048e5", width: 1200 },
+  "menu-iced-latte": { id: "photo-1517701604599-bb29b565090c", width: 1200 },
+  "menu-espresso-soda": { id: "photo-1636144832475-0d81f893354d", width: 1200 },
+  "menu-cold-brew-bottle": { id: "photo-1647972488473-ca3796499272", width: 1200 },
+  "menu-almond-pain": { id: "photo-1710220988376-16dbd51fd1de", width: 1200 },
+  "menu-avo-toast": { id: "photo-1783307525039-b92506474dc8", width: 1200 },
+  "menu-eggs-any": { id: "photo-1642451378137-7bf98fb6a65a", width: 1200 },
+  "menu-granola-bowl": { id: "photo-1612182062572-e29c5dfb5eb4", width: 1200 },
+  "menu-maple-oat": { id: "photo-1476283721796-dd935b062838", width: 1200 },
+  "menu-pumpkin-spice": { id: "photo-1569383893830-b73dc4a03af0", width: 1200 },
+  "menu-gingerbread": { id: "photo-1698672362963-ace2504043b7", width: 1200 },
+  "menu-lavender-tonic": { id: "photo-1599137937030-454e1c0de965", width: 1200 },
+
   // --- editorial ---
   "editorial-still": { id: "1504630083234-14187a9df0f5", width: 1800 },
   "editorial-sign": { id: "1497935586351-b67a49e012bf", width: 1800 },

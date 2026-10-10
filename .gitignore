@@ -12,3 +12,8 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Review scratch for image sourcing: candidate downloads and contact sheets.
+# The decisions that came out of it are recorded in scripts/promote-candidates.cjs
+# and scripts/promoted-manifest.json, so the pixels themselves are not history.
+.staging
