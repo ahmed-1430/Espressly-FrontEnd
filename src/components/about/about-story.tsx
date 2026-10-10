@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
+import { SlideReveal } from "@/components/motion/slide-reveal";
 import { RevealImage } from "@/components/motion/reveal-image";
 import { ButtonLink } from "@/components/ui/button";
 import { SplitLines } from "@/components/motion/split-lines";
@@ -54,7 +55,10 @@ export function AboutStory() {
         </div>
 
         <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-7 lg:col-start-2">
+          <SlideReveal from="up" className="lg:col-span-7 lg:col-start-2">
+            {/* Three paragraphs, down from five. The blend's eleven versions and the
+                abandoned second location were good writing that the page does not
+                need in order to say what it says. */}
             <div className="space-y-6 text-pretty leading-[1.75] text-muted-foreground">
               <p className="font-display text-[clamp(1.25rem,2.4vw,1.75rem)] leading-snug text-foreground italic">
                 In 2019 the space was twelve square metres, the machine was a
@@ -62,43 +66,27 @@ export function AboutStory() {
                 the word &ldquo;espresso&rdquo; written on it in marker.
               </p>
               <p>
-                The reason for opening it was narrow. After eight years of pulling
-                shots on behalf of other people, we wanted to make one coffee and
-                make it the same every morning. That sounds like a low ambition. It
-                is the hardest thing a coffee shop can attempt.
+                After eight years of pulling shots on other people&rsquo;s behalf, we
+                wanted to make one coffee and make it the same every morning. Eleven
+                versions of the blend later: a dark roast, mostly Brazil, with a
+                small Ethiopian component for the fruit.
               </p>
               <p>
-                We spent two years on the blend. Eleven versions, a number of
-                disagreements about it, and one afternoon where we very nearly opened
-                a second location instead. What survived was the simplest version we
-                had tried: a dark roast, mostly Brazil, with a small Ethiopian
-                component for the fruit. Cocoa, dried fig, and a finish long enough
-                that people notice it halfway through the sip.
-              </p>
-              <p>
-                Everything since has been logistics around that decision. We roasted
-                on site in 2024 so the coffee would rest the number of days it
-                actually needs. We kept the room quiet because a room you can hear
-                yourself think in is worth more than a room that turns tables. We
-                never added music, and we never added a second blend.
-              </p>
-              <p>
-                What we did add was patience. The pastry is laminated in-house. The
-                filter changes as the week goes on. There is a table at the window
-                that people have quietly claimed as theirs, and we have stopped
-                reseating anyone who sits at it.
+                Everything since has been logistics around that decision. We roast on
+                site so the coffee rests the days it needs. We never added music, and
+                we never added a second blend.
               </p>
             </div>
+          </SlideReveal>
 
-            <Reveal className="mt-12 flex flex-wrap gap-4">
-              <ButtonLink href="/menu" variant="outline" arrow>
-                See what we make
-              </ButtonLink>
-              <ButtonLink href="/gallery" variant="ghost">
-                Look at the room
-              </ButtonLink>
-            </Reveal>
-          </div>
+          <Reveal className="mt-12 flex flex-wrap gap-4 lg:col-span-7 lg:col-start-2">
+            <ButtonLink href="/menu" variant="outline" arrow>
+              See what we make
+            </ButtonLink>
+            <ButtonLink href="/gallery" variant="ghost">
+              Look at the room
+            </ButtonLink>
+          </Reveal>
 
           {/* Side rail: pull quotes from the people who work here. */}
           <aside className="lg:col-span-3 lg:col-start-10">

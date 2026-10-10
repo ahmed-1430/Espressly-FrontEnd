@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Cursor } from "@/components/motion/cursor";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { AnchorScroll } from "@/components/motion/anchor-scroll";
+import { PageTransition } from "@/components/motion/page-transition";
 import { StructuredData } from "@/components/layout/structured-data";
 import { fontVariables } from "@/styles/fonts";
 import "@/styles/globals.css";
@@ -99,9 +100,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <StructuredData />
 
-        <main id="main" className="relative">
-          {children}
-        </main>
+        <PageTransition>
+          <main id="main" className="relative">
+            {children}
+          </main>
+        </PageTransition>
 
         <Footer />
       </body>

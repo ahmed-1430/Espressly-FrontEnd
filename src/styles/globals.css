@@ -455,28 +455,39 @@
   }
 }
 
-/* View transitions: page-level crossfade. Navigation uses React's
-   ViewTransition wrapper with a directional type so the exit/enter pair is
-   distinguishable from same-route content changes. */
-::view-transition {
-  pointer-events: none;
-}
+/* Page transitions are handled in src/components/motion/page-transition.tsx.
 
-::view-transition-old(.page-exit) {
-  animation: 140ms var(--ease-out-quart) both fade-out;
-}
+   These rules used to live here and claimed navigation used React's
+   ViewTransition wrapper. No wrapper existed anywhere, so they never applied --
+   dead CSS describing behaviour the site did not have. The component does the
+   work with plain opacity and transform instead, which needs no feature flag
+   and degrades to nothing under reduced motion. */
 
-::view-transition-new(.page-enter) {
-  animation: 380ms var(--ease-out-expo) 60ms both fade-rise;
-}
+/* Page transition: a short settle as the incoming page arrives.
 
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(*),
-  ::view-transition-new(*),
-  ::view-transition-group(*) {
-    animation-duration: 0.001ms !important;
-    animation-delay: 0s !important;
+   Applied by src/components/motion/page-transition.tsx to an element keyed by
+   pathname, so a navigation recreates the element and the animation restarts by
+   itself.
+
+   An earlier implementation held the reveal as component state and reset it in an
+   effect. The key was on the element the component returned, so recreating that
+   element never reset the state and the transition played once on first load and
+   never again. An animation on a keyed element cannot fall out of sync that way.
+
+   The reduced-motion block below clamps this along with everything else. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
   }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+[style*="page-enter"] {
+  animation: 560ms var(--ease-out-expo) both page-enter;
 }
 
 /* Lightbox image entry: a quick settle from slight overscale. */
