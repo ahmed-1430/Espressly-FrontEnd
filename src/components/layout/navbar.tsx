@@ -23,13 +23,27 @@ import { scrollToTop } from "@/lib/scroll";
  * The active-route indicator is a single element that slides between items via
  * Motion's shared-layout animation, rather than each link drawing its own
  * underline — so the mark travels between routes instead of blinking.
+ *
+ * Tone is a route property, not a prop. The shop opens on the one parchment hero
+ * on the site, and cream type on cream paper is unreadable — so while the bar is
+ * still transparent over it, the logo, labels and call to action all switch to
+ * their espresso knockouts. Past the hero the shop is dark like everywhere else,
+ * so the treatment reverts the moment the glass bar takes over.
  */
+
+/** Routes whose hero is light enough to need dark type over it. */
+const LIGHT_HERO_ROUTES = ["/shop"];
+
 export function Navbar() {
   const pathname = usePathname();
   const scrolled = useScrolled(40);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const lightHero = LIGHT_HERO_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
 
   useEffect(() => {
     let last = window.scrollY;
@@ -58,6 +72,8 @@ export function Navbar() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   const solid = scrolled || menuOpen;
+  // Dark type is only needed while the bar is see-through over a light hero.
+  const invert = lightHero && !solid;
 
   return (
     <>
@@ -75,12 +91,15 @@ export function Navbar() {
           the worst case — and muted nav labels over that are unreadable. The
           gradient is subtle enough to be invisible on the dark heroes and is
           removed entirely once the glass bar takes over.
+
+          Over the parchment hero there is nothing to darken, so the scrim is
+          dropped and the type flips to its espresso knockout instead.
         */}
         <span
           aria-hidden
           className={cn(
             "pointer-events-none absolute inset-0 bg-linear-to-b from-background-sunken/85 via-background-sunken/35 to-transparent transition-opacity duration-500",
-            solid ? "opacity-0" : "opacity-100",
+            solid || invert ? "opacity-0" : "opacity-100",
           )}
         />
         <Container className="relative flex h-16 items-center justify-between gap-6 lg:h-[76px]">
@@ -99,7 +118,11 @@ export function Navbar() {
             className="relative z-[110] -m-2 shrink-0 p-2"
           >
             <Image
-              src="/brand/espressly-logo-cream.png"
+              src={
+                invert
+                  ? "/brand/espressly-logo-espresso.png"
+                  : "/brand/espressly-logo-cream.png"
+              }
               alt=""
               width={855}
               height={239}
@@ -119,6 +142,7 @@ export function Navbar() {
                     href={link.href}
                     label={link.label}
                     active={isActive(link.href)}
+                    invert={invert}
                   />
                 </li>
               ))}
@@ -131,17 +155,28 @@ export function Navbar() {
               className={cn(
                 "group relative hidden overflow-hidden border px-6 py-3 text-[0.6875rem] font-medium uppercase tracking-[0.16em] transition-colors duration-500 sm:inline-flex",
                 // Over a photograph the border and label need their own backing to
-                // stay legible; over the glass bar the transparent treatment is fine.
-                solid
-                  ? "border-border-strong text-foreground hover:border-accent hover:text-accent-bright"
-                  : "border-foreground/25 bg-background-sunken/45 text-foreground backdrop-blur-[6px] hover:border-accent hover:text-accent-bright",
+                // stay legible; over the glass bar the transparent treatment is
+                // fine. Over parchment there is no dark to sit on, so the button
+                // takes ink instead of the usual smoked-glass treatment.
+                invert
+                  ? "border-ink-espresso/30 text-ink-espresso hover:border-accent-deep hover:text-accent-deep"
+                  : solid
+                    ? "border-border-strong text-foreground hover:border-accent hover:text-accent-bright"
+                    : "border-foreground/25 bg-background-sunken/45 text-foreground backdrop-blur-[6px] hover:border-accent hover:text-accent-bright",
               )}
             >
               <span
                 aria-hidden
                 className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-y-100"
               />
-              <span className="relative z-10 transition-colors duration-300 group-hover:text-accent-foreground">
+              <span
+                className={cn(
+                  "relative z-10 transition-colors duration-300",
+                  invert
+                    ? "group-hover:text-accent-foreground"
+                    : "group-hover:text-accent-foreground",
+                )}
+              >
                 Shop Beans
               </span>
             </Link>
@@ -152,7 +187,10 @@ export function Navbar() {
               onClick={() => setMenuOpen(true)}
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
-              className="-mr-2 flex h-11 w-11 items-center justify-center text-foreground transition-opacity duration-300 lg:hidden"
+              className={cn(
+                "-mr-2 flex h-11 w-11 items-center justify-center transition-opacity duration-300 lg:hidden",
+                invert ? "text-ink-espresso" : "text-foreground",
+              )}
             >
               <span className="sr-only">Open menu</span>
               <MenuIcon className="h-5 w-5" />
@@ -179,10 +217,13 @@ function NavLink({
   href,
   label,
   active,
+  invert,
 }: {
   href: string;
   label: string;
   active: boolean;
+  /** Over the parchment hero, where the default muted cream is unreadable. */
+  invert?: boolean;
 }) {
   const reduce = useReducedMotion();
 
@@ -192,9 +233,13 @@ function NavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "relative block px-1 py-2 text-[0.6875rem] font-medium uppercase tracking-[0.2em] transition-colors duration-300",
-        active
-          ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground",
+        invert
+          ? active
+            ? "text-ink-espresso"
+            : "text-ink-espresso/65 hover:text-ink-espresso"
+          : active
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground",
       )}
     >
       {label}
@@ -203,7 +248,10 @@ function NavLink({
         <motion.span
           layoutId="nav-active"
           aria-hidden
-          className="absolute inset-x-0 -bottom-0.5 h-px bg-accent"
+          className={cn(
+            "absolute inset-x-0 -bottom-0.5 h-px",
+            invert ? "bg-accent-deep" : "bg-accent",
+          )}
           transition={
             reduce
               ? { duration: 0 }
