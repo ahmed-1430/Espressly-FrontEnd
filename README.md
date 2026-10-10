@@ -150,10 +150,12 @@ npm run lint
 npm run typecheck
 npm run build
 
-npm run verify              # all three browser harnesses below
+npm run verify              # every browser harness below
 npm run verify:interactions # overflow at 9 widths, menu, lightbox, forms
 npm run verify:layout       # collapsed media, squeezed text, empty pages
 npm run verify:reveals      # no element left visually suppressed
+npm run verify:console      # console errors, heading order, alt coverage
+npm run verify:motion       # nothing hidden under reduced motion
 npm run assets:check        # missing or orphaned image references
 npm run assets:alt          # gallery alt text against the actual photographs
 npm run audit:assets        # transferred image bytes per route
@@ -176,7 +178,10 @@ exist because several defects here were invisible to review by reading the code:
 The harnesses also guard against testing the wrong thing. Scroll locking is
 asserted with a real wheel gesture rather than `window.scrollBy`, because
 `overflow: hidden` does not stop programmatic scrolling and asserting on it would
-pass against a lock that did not work.
+pass against a lock that did not work. The 404 route is checked for its status,
+heading and links out instead of a clean console, since a missing route *should*
+answer 404. And `verify:motion` skips `aria-hidden` elements, because the inactive
+slides of a cross-fade are meant to be invisible.
 
 ## Deploying
 
