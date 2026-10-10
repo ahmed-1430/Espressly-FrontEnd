@@ -14,14 +14,16 @@
     "verify:reveals": "node scripts/verify-reveals.cjs",
     "verify:interactions": "node scripts/verify-interactions.cjs",
     "verify:layout": "node scripts/verify-layout.cjs",
-    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress",
+    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress && npm run verify:anchors",
     "audit:assets": "node scripts/audit-assets.cjs",
     "shoot": "node scripts/shoot.cjs",
     "assets:alt": "node scripts/verify-gallery-alt.cjs",
     "assets:list": "node scripts/list-images.cjs",
     "verify:console": "node scripts/audit-console.cjs",
     "verify:motion": "node scripts/verify-reduced-motion.cjs",
-    "verify:progress": "node scripts/verify-progress.cjs"
+    "verify:progress": "node scripts/verify-progress.cjs",
+    "verify:anchors": "node scripts/verify-anchors.cjs",
+    "audit:code": "node scripts/audit-dead-code.cjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

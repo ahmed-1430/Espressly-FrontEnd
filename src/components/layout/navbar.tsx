@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import { Container } from "@/components/layout/container";
 import { MobileMenu } from "./mobile-menu";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { scrollToTop } from "@/lib/scroll";
 
 /**
  * Site navigation.
@@ -86,6 +87,15 @@ export function Navbar() {
           <Link
             href="/"
             aria-label={`${siteConfig.name} — home`}
+            onClick={(event) => {
+              // Navigating to a route the browser is already on is not a route
+              // change, so nothing resets the scroll position. Returning home
+              // should always mean the top of the page.
+              if (pathname === "/") {
+                event.preventDefault();
+                scrollToTop();
+              }
+            }}
             className="relative z-[110] -m-2 shrink-0 p-2"
           >
             <Image

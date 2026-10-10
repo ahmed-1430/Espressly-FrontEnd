@@ -45,7 +45,7 @@ export function subscribeToNewsletter(payload: NewsletterPayload) {
   return request(payload);
 }
 
-export const fieldErrors = {
+const fieldErrors = {
   required: "This field is required.",
   email: "Enter a valid email address.",
   message: "Please write at least 20 characters.",

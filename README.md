@@ -157,8 +157,11 @@ npm run verify:reveals      # no element left visually suppressed
 npm run verify:console      # console errors, heading order, alt coverage
 npm run verify:motion       # nothing hidden under reduced motion
 npm run verify:progress     # reading progress is at the top edge, not under the nav
+npm run verify:anchors      # in-page links land clear of the sticky chrome
+npm run verify:anchors      # in-page links land clear of the sticky chrome
 npm run assets:check        # missing or orphaned image references
 npm run assets:alt          # gallery alt text against the actual photographs
+npm run audit:code          # orphaned components, unreferenced exports
 npm run audit:assets        # transferred image bytes per route
 ```
 
@@ -175,6 +178,10 @@ exist because several defects here were invisible to review by reading the code:
   bug: it measures rendered geometry rather than trusting the markup.
 - Every hero photograph was invisible because the parallax wrapper was absolutely
   positioned with only vertical insets and so shrink-wrapped to zero width.
+- In-page anchors landed their target at the very top of the viewport, underneath
+  the header. Worse, a hash href on a Next `<Link>` never reached the delegated
+  handler at all: React's root listener called `preventDefault` first, so the
+  handler saw the event as already handled and quietly did nothing.
 
 The harnesses also guard against testing the wrong thing. Scroll locking is
 asserted with a real wheel gesture rather than `window.scrollBy`, because
@@ -183,6 +190,10 @@ pass against a lock that did not work. The 404 route is checked for its status,
 heading and links out instead of a clean console, since a missing route *should*
 answer 404. And `verify:motion` skips `aria-hidden` elements, because the inactive
 slides of a cross-fade are meant to be invisible.
+
+The squeezed-text rule in `verify:layout` counts real line boxes via a `Range`
+rather than inferring wrapping from element height, because a grid item stretched
+to a tall row reports a large height whether or not its text wrapped.
 
 ## Deploying
 

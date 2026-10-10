@@ -5,7 +5,7 @@ import Image from "next/image";
 import { HeroEyebrow, HeroMeta } from "./hero-atoms";
 import { HeroEntrance, HeroExit } from "./hero-motion";
 import { ButtonLink } from "@/components/ui/button";
-import { products } from "@/data/products";
+import { featuredProducts, products } from "@/data/products";
 import { cn } from "@/lib/cn";
 
 /**
@@ -22,7 +22,13 @@ import { cn } from "@/lib/cn";
  */
 export function ShopHero() {
   const rootRef = useRef<HTMLElement>(null);
-  const featured = products.slice(0, 2);
+
+  // Curated in the data module rather than taken from the head of the array, so
+  // reordering the catalogue cannot silently change which products the hero
+  // shows.
+  const featured = featuredProducts
+    .map((id) => products.find((product) => product.id === id))
+    .filter((product): product is (typeof products)[number] => Boolean(product));
 
   return (
     <section

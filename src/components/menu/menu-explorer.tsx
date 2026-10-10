@@ -148,7 +148,10 @@ export function MenuExplorer() {
         inside a full-bleed rail; from `lg` the rail becomes a static flex row
         with the live count beside it.
       */}
-      <div className="sticky top-16 z-40 -mx-5 border-y border-border bg-background/90 backdrop-blur-md sm:-mx-8 lg:top-[76px] lg:mx-0 lg:border-x-0 lg:border-t-0">
+      <div
+        data-anchor-offset
+        className="sticky top-16 z-40 -mx-5 border-y border-border bg-background/90 backdrop-blur-md sm:-mx-8 lg:top-[76px] lg:mx-0 lg:border-x-0 lg:border-t-0"
+      >
         <div className="lg:flex lg:items-center lg:justify-between lg:gap-6">
           <div
             role="tablist"

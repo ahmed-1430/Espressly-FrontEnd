@@ -27,7 +27,7 @@ function getLenis(): LenisHandle | undefined {
 }
 
 /** Suspends smooth scrolling. Safe to call more than once. */
-export function stopScroll() {
+function stopScroll() {
   const lenis = getLenis();
   if (!lenis) return;
   pausedCount += 1;
@@ -35,7 +35,7 @@ export function stopScroll() {
 }
 
 /** Resumes smooth scrolling. Extra calls beyond the matching stop are ignored. */
-export function startScroll() {
+function startScroll() {
   const lenis = getLenis();
   if (!lenis) return;
   pausedCount = Math.max(0, pausedCount - 1);
@@ -45,21 +45,39 @@ export function startScroll() {
 /**
  * Scrolls an element into view beneath the fixed navigation.
  *
+ * Native anchor jumps are wrong here twice over. They land the target's top edge
+ * underneath the fixed header, hiding it, and they ignore the smooth-scroll
+ * layer, so the jump fights the interpolation rather than driving it.
+ *
+ * The offset is measured rather than passed in: the header changes height at
+ * `lg`, and some sections additionally pin a sticky rail beneath it (the menu's
+ * category rail). Any `[data-anchor-offset]` element contributes to the offset,
+ * so a target can declare that something is stuck above it.
+ *
  * Falls back to native smooth scrolling when Lenis is not running, so anchors
  * still behave correctly on touch devices and under reduced motion.
  */
-export function scrollToId(id: string, navOffset = 76) {
+export function scrollToId(id: string) {
   const target = document.getElementById(id);
   if (!target) return;
 
+  const header = document.querySelector("header");
+  let offset = header ? header.getBoundingClientRect().height : 0;
+
+  for (const pinned of document.querySelectorAll<HTMLElement>("[data-anchor-offset]")) {
+    const box = pinned.getBoundingClientRect();
+    // Only count a rail that is actually stuck at the top right now.
+    if (box.top <= offset + 1 && box.height > 0) offset += box.height;
+  }
+
   const lenis = getLenis();
   if (lenis) {
-    lenis.scrollTo(target, { offset: -navOffset });
+    lenis.scrollTo(target, { offset: -offset });
     return;
   }
 
   window.scrollTo({
-    top: target.getBoundingClientRect().top + window.scrollY - navOffset,
+    top: target.getBoundingClientRect().top + window.scrollY - offset,
     behavior: prefersReducedMotion() ? "auto" : "smooth",
   });
 }
@@ -139,15 +157,4 @@ export function useScrollLock(active: boolean) {
       }
     };
   }, [active]);
-}
-
-/**
- * Re-measures ScrollTrigger after a layout change.
- *
- * Called after the mobile panel closes, because the scroll lock changes the
- * document height by the scrollbar's width and every trigger below the fold
- * would otherwise be positioned against the pre-lock geometry.
- */
-export function refreshScrollTriggers() {
-  ScrollTrigger.refresh();
 }

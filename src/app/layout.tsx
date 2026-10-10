@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Cursor } from "@/components/motion/cursor";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { AnchorScroll } from "@/components/motion/anchor-scroll";
 import { StructuredData } from "@/components/layout/structured-data";
 import { fontVariables } from "@/styles/fonts";
 import "@/styles/globals.css";
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
 
         <SmoothScroll />
+        <AnchorScroll />
         <Cursor />
         <Navbar />
         <ScrollProgress />
