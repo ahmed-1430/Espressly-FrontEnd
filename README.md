@@ -156,6 +156,7 @@ npm run verify:layout       # collapsed media, squeezed text, empty pages
 npm run verify:reveals      # no element left visually suppressed
 npm run verify:console      # console errors, heading order, alt coverage
 npm run verify:motion       # nothing hidden under reduced motion
+npm run verify:progress     # reading progress is at the top edge, not under the nav
 npm run assets:check        # missing or orphaned image references
 npm run assets:alt          # gallery alt text against the actual photographs
 npm run audit:assets        # transferred image bytes per route

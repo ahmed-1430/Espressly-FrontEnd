@@ -60,7 +60,7 @@ export function NewsletterForm() {
               type="email"
               name="email"
               autoComplete="email"
-              placeholder="you@example.com"
+              placeholder="you@yourdomain.com"
               value={email}
               disabled={status === "submitting"}
               aria-invalid={invalid || undefined}

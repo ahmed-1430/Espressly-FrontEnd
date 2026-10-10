@@ -157,7 +157,7 @@ export function ContactForm() {
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder="you@yourdomain.com"
           value={values.email}
           error={errors.email}
           onChange={(event) => update("email", event.target.value)}
