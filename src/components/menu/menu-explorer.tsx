@@ -385,10 +385,14 @@ function ItemMeta({ item, className }: { item: MenuItem; className?: string }) {
 /**
  * Item photograph.
  *
- * Items fall back to their category image, so a category always has a visual even
- * before individual drinks are photographed. Alt is empty: the item name and
- * description already carry the meaning, and a repeated stock caption would add
- * noise for screen reader users.
+ * No fallback. An earlier version fell back to the category image, which meant
+ * one frame quietly illustrated every drink in a category — and a category
+ * fallback is worse than no picture at all, because it asserts the photograph is
+ * the drink rather than merely nearby. Every item now carries its own frame, and
+ * an item without one renders no image rather than someone else's.
+ *
+ * Alt is empty: the item name and description sit beside the photograph and
+ * already carry the meaning, so an alt would repeat them for screen reader users.
  */
 function MenuItemImage({
   item,
@@ -397,13 +401,11 @@ function MenuItemImage({
   item: MenuItem;
   priority: boolean;
 }) {
-  const src =
-    item.image ?? menuCategories.find((entry) => entry.id === item.category)?.image;
-  if (!src) return null;
+  if (!item.image) return null;
 
   return (
     <Image
-      src={src}
+      src={item.image}
       alt=""
       fill
       priority={priority}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GalleryHero } from "@/components/hero/gallery-hero";
 import { GalleryGrid } from "@/components/gallery/gallery-grid";
+import { HorizontalFrames } from "@/components/gallery/horizontal-frames";
 import { Container } from "@/components/layout/container";
 import { galleryFrames } from "@/data/gallery";
 import { siteConfig } from "@/config/site";
@@ -21,6 +22,9 @@ export default function GalleryPage() {
   return (
     <>
       <GalleryHero />
+
+      {/* The whole set at once, travelling. A change of pace before the spreads. */}
+      <HorizontalFrames />
 
       <Container className="py-20 sm:py-24 lg:py-32">
         <div id="frames" className="flex flex-col gap-10">

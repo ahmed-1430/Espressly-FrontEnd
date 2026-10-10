@@ -181,7 +181,7 @@ export const menuItems: readonly MenuItem[] = [
     dietary: ["vegetarian", "contains-dairy"],
     tasting:
       "The house signature since the first week. Toasted and warm without being sweet, which is the entire point of the salt.",
-    image: "/images/bar-macchiato.jpg",
+    image: "/images/menu-latte.jpg",
   },
   {
     id: "cardamom-flat-white",
@@ -338,7 +338,7 @@ export const menuItems: readonly MenuItem[] = [
     price: 6.5,
     dietary: ["vegetarian"],
     tasting: "Grassy and sweet, with no bitterness at all if it is whisked properly.",
-    image: "/images/tea-glass.jpg",
+    image: "/images/tea-matcha.jpg",
   },
   {
     id: "sencha",
@@ -368,7 +368,10 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 5.5,
     dietary: ["vegan", "gluten-free"],
-    image: "/images/tea-ceramic.jpg",
+    // Loose leaf is the Sencha's frame. Earl Grey is brewed black tea, so it
+    // takes the glass: two black teas in an identical white cup are the same
+    // photograph twice, however different the leaves are.
+    image: "/images/tea-glass.jpg",
   },
   {
     id: "hojicha",
@@ -388,7 +391,9 @@ export const menuItems: readonly MenuItem[] = [
     unit: "ml",
     price: 6,
     dietary: ["vegetarian", "contains-dairy"],
-    image: "/images/tea-matcha-bowl.jpg",
+    // Star anise and milk in the cup. This was pointed at the matcha bowl, which
+    // showed the reader a green drink and labelled it spiced tea.
+    image: "/images/tea-chai.jpg",
   },
 
   // --- pastry ---

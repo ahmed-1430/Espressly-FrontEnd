@@ -36,11 +36,18 @@ const MANIFEST = {
 
   // --- tea ---
   "tea-matcha": { id: "1536256263959-770b48d82b0a", width: 1200 },
-  "tea-matcha-bowl": { id: "1582793988951-9aed5509eb97", width: 1200 },
-  "tea-loose-leaf": { id: "1576092768241-dec231879fc3", width: 1200 },
-  "tea-glass": { id: "1576092768241-dec231879fc3", width: 1200 },
+  // These two used to share one Unsplash id, so Sencha and Earl Grey rendered
+  // as the same photograph under different names. A shared id in the manifest
+  // is worse than a missing frame: nothing looks broken, the picture is just
+  // quietly wrong.
+  "tea-loose-leaf": { id: "1433891248364-3ce993ff0e92", width: 1200 },
+  "tea-glass": { id: "1606265771707-c052d0e14656", width: 1200 },
   "tea-pot": { id: "1594631252845-29fc4cc8cde9", width: 1200 },
   "tea-ceramic": { id: "1572442388796-11668a67e53d", width: 1200 },
+  // Star anise and milk visible in the cup, so the frame is actually masala chai.
+  // Masala Chai previously pointed at the matcha bowl, which showed the reader a
+  // green drink and called it spiced tea.
+  "tea-chai": { id: "1636920272028-c27f1ae474c3", width: 1200 },
 
   // --- kitchen & pastry ---
   "food-croissant": { id: "1555507036-ab1f4038808a", width: 1200 },
