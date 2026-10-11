@@ -11,6 +11,7 @@ import {
   type MenuCategoryId,
   type MenuItem,
 } from "@/data/menu";
+import { FlipText } from "@/components/motion/text-motion";
 import { cn } from "@/lib/cn";
 
 /**
@@ -212,7 +213,10 @@ export function MenuExplorer() {
       {/* --- active category note --- */}
       <div className="flex flex-col gap-3 border-b border-border py-8 lg:flex-row lg:items-baseline lg:justify-between lg:py-10">
         <h2 className="text-[clamp(1.75rem,4vw,3rem)] tracking-display" aria-live="polite">
-          {category.label}
+          {/* Flip rather than swap: the label is the one piece of text on this page
+              that genuinely changes value, and a split-flap change reads as the
+              menu turning over rather than content silently mutating. */}
+          <FlipText value={category.label} />
         </h2>
         <p className="max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground">
           {category.note}

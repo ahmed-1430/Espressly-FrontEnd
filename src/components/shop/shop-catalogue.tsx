@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { products, productCategories, type ProductCategory } from "@/data/products";
+import { FlipText } from "@/components/motion/text-motion";
 import { ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/cn";
@@ -87,8 +88,16 @@ export function ShopCatalogue() {
         </div>
 
         <p className="micro shrink-0 text-muted-foreground">
-          <span className="text-accent">{String(visible.length).padStart(2, "0")}</span>{" "}
-          products
+          {/* The count is a live value, so it flips rather than swapping — the
+              digits changing on a board makes the filter's effect legible
+              instead of leaving the reader to notice a quiet number change. */}
+          <FlipText
+            className="text-accent"
+            value={String(visible.length).padStart(2, "0")}
+            direction="down"
+            duration={0.45}
+          />
+          {" products"}
         </p>
       </div>
 
