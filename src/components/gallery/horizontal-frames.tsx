@@ -111,7 +111,7 @@ export function HorizontalFrames({ count = 12 }: { count?: number }) {
     <section
       ref={sectionRef}
       aria-label="The set at a glance"
-      className="relative overflow-hidden border-y border-border bg-background-sunken py-16 lg:py-24"
+      className="relative overflow-hidden border-y border-border bg-background-sunken pt-16 pb-10 lg:pt-24 lg:pb-12"
     >
       <div className="mx-auto w-full max-w-[110rem] px-5 sm:px-8 lg:px-12">
         <div className="flex items-baseline justify-between gap-6 pb-8">

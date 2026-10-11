@@ -161,6 +161,53 @@ const readX = () => {
     check("no horizontal page overflow after the pin", overflowX <= 1, `${overflowX}px`);
   }
 
+  // --- no transformed ancestor above fixed content ----------------------
+  // A transformed ancestor becomes the containing block for position: fixed
+  // descendants, so anything pinned inside it stops being pinned and scrolls away
+  // instead. The page transition once left a translate3d(0,0,0) on the element
+  // wrapping <main>, which silently broke this pin while every other check passed.
+  {
+    const routes = ["/", "/gallery", "/menu", "/shop", "/about", "/contact"];
+    const offenders = [];
+
+    for (const route of routes) {
+      await page.goto(base + route, { waitUntil: "networkidle0" });
+      await new Promise((r) => setTimeout(r, 1400));
+
+      const found = await page.evaluate(() => {
+        const out = [];
+        for (const fixed of document.querySelectorAll("main *")) {
+          const cs = getComputedStyle(fixed);
+          if (cs.position !== "fixed") continue;
+          // GSAP's own pin sets this deliberately on the element it pins.
+          if (fixed.closest(".pin-spacer")) continue;
+          let el = fixed.parentElement;
+          while (el && el !== document.body) {
+            const st = getComputedStyle(el);
+            if (st.transform !== "none") {
+              out.push(
+                `${fixed.tagName.toLowerCase()} under ${el.tagName.toLowerCase()}.${String(
+                  el.className,
+                ).slice(0, 30)} [${st.transform.slice(0, 24)}]`,
+              );
+              break;
+            }
+            el = el.parentElement;
+          }
+        }
+        return out;
+      });
+
+      offenders.push(...found.map((f) => `${route}: ${f}`));
+    }
+
+    check(
+      "no transformed ancestor traps fixed content",
+      offenders.length === 0,
+      offenders.slice(0, 3).join(" | "),
+    );
+  }
+
   // --- mobile: must NOT pin, must remain natively draggable ---
   {
     await page.setViewport({

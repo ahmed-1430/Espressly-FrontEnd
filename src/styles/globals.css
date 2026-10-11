@@ -460,8 +460,8 @@
    These rules used to live here and claimed navigation used React's
    ViewTransition wrapper. No wrapper existed anywhere, so they never applied --
    dead CSS describing behaviour the site did not have. The component does the
-   work with plain opacity and transform instead, which needs no feature flag
-   and degrades to nothing under reduced motion. */
+   work with plain opacity instead, which needs no feature flag and degrades to
+   nothing under reduced motion. */
 
 /* Page transition: a short settle as the incoming page arrives.
 
@@ -474,20 +474,27 @@
    element never reset the state and the transition played once on first load and
    never again. An animation on a keyed element cannot fall out of sync that way.
 
+   Opacity only, and that is load-bearing rather than a stylistic choice. This
+   element wraps <main>, and an ancestor with a transform becomes the containing
+   block for its position: fixed descendants. An earlier version ended on
+   translate3d(0,0,0), which with fill-mode both persisted indefinitely and turned
+   all of <main> into a containing block -- so the gallery's pinned section silently
+   stopped being pinned and scrolled away instead, leaving a blank page. The rise
+   was a nice-to-have; a working pin and a fixed navigation are not. Anything that
+   wants a rise must animate a descendant, never this wrapper.
+
    The reduced-motion block below clamps this along with everything else. */
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
   }
 }
 
 [style*="page-enter"] {
-  animation: 560ms var(--ease-out-expo) both page-enter;
+  animation: 480ms var(--ease-out-expo) both page-enter;
 }
 
 /* Lightbox image entry: a quick settle from slight overscale. */

@@ -26,7 +26,8 @@
     "audit:code": "node scripts/audit-dead-code.cjs",
     "verify:horizontal": "node scripts/verify-horizontal.cjs",
     "audit:menu": "node scripts/audit-menu-images.cjs",
-    "verify:transition": "node scripts/verify-page-transition.cjs"
+    "verify:transition": "node scripts/verify-page-transition.cjs",
+    "walk": "node scripts/walk-page.cjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

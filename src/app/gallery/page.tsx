@@ -26,7 +26,10 @@ export default function GalleryPage() {
       {/* The whole set at once, travelling. A change of pace before the spreads. */}
       <HorizontalFrames />
 
-      <Container className="py-20 sm:py-24 lg:py-32">
+      {/* Asymmetric: the band above already ends with its own generous padding, so
+          equal top padding here stacked into roughly 250px of dead space between
+          the last frame and this rail. */}
+      <Container className="pt-10 pb-20 sm:pt-12 sm:pb-24 lg:pt-14 lg:pb-32">
         <div id="frames" className="flex flex-col gap-10">
           {/* Rail between the exhibition hero and the frames themselves. */}
           <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-6">
