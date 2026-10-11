@@ -72,10 +72,30 @@ const routes = ["/", "/menu", "/shop", "/gallery", "/about", "/contact"];
         return matrix.m42 > 1;
       });
 
+      // Curtain reveals hide their subject two ways at once, so neither is
+      // covered by the opacity/clip-path check above: a panel still at scale 1
+      // paints straight over the photograph, and the body still at opacity 0
+      // hides it even with every panel collapsed. Both must have been released.
+      const curtains = [...document.querySelectorAll("[data-curtain]")];
+      const stuckCurtains = curtains.filter((root) => {
+        const body = root.querySelector("[data-curtain-body]");
+        if (body && parseFloat(getComputedStyle(body).opacity) === 0) return true;
+        // Panels are direct children of the overlay; any panel retaining more
+        // than a sliver of its axis is still covering.
+        return [...root.querySelectorAll("[data-curtain-panel]")].some((panel) => {
+          const m = new DOMMatrixReadOnly(getComputedStyle(panel).transform);
+          // scaleY collapses height (matrix.d), scaleX collapses width (matrix.a).
+          // Either still above 0.02 means the panel is painted over the frame.
+          return Math.abs(m.d) > 0.02 || Math.abs(m.a) > 0.02;
+        });
+      });
+
       return {
         total: targets.length,
         hidden: hidden.length,
         hiddenLines: unrevealedLines.length,
+        curtains: curtains.length,
+        stuckCurtains: stuckCurtains.length,
         detail: hidden.map(({ el, reason }) => ({
           reason,
           variant: el.dataset.reveal,
@@ -87,10 +107,11 @@ const routes = ["/", "/menu", "/shop", "/gallery", "/about", "/contact"];
 
     // The invariant: no element may be left visually suppressed after a full
     // scroll. Anything still hidden is a real defect, not a timing artefact.
-    const ok = report.hidden === 0 && report.hiddenLines === 0;
+    const ok =
+      report.hidden === 0 && report.hiddenLines === 0 && report.stuckCurtains === 0;
     if (!ok) failures++;
     console.log(
-      `${ok ? "PASS" : "FAIL"} ${route}  targets=${report.total} hidden=${report.hidden} hiddenLines=${report.hiddenLines}`,
+      `${ok ? "PASS" : "FAIL"} ${route}  targets=${report.total} hidden=${report.hidden} hiddenLines=${report.hiddenLines} curtains=${report.curtains} stuck=${report.stuckCurtains}`,
     );
     if (report.detail.length) {
       console.log("       " + JSON.stringify(report.detail));

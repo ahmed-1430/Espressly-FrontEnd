@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { galleryFrames, type GalleryFrame } from "@/data/gallery";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { CurtainReveal } from "@/components/motion/curtain-reveal";
 import { cn } from "@/lib/cn";
 import { GalleryViewer } from "./gallery-viewer";
 
@@ -21,48 +21,13 @@ import { GalleryViewer } from "./gallery-viewer";
  * of slivers. Layout here is driven by explicit aspect ratios on a flex column,
  * which cannot collapse.
  *
- * Reveal is a GSAP clip-path driven by ScrollTrigger batch, so frames arrive as
- * they enter rather than all at once on mount.
+ * Reveal is a Motion curtain: oversized frames open with an edge wipe, the
+ * smaller ones part in five panels from the centre outward, so the page's two
+ * dominant frame types do not arrive by the same gesture.
  */
 export function GalleryGrid() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  /* --- staggered clip reveal as frames scroll into view --- */
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const frames = root.querySelectorAll<HTMLElement>("[data-frame]");
-
-    if (reduce) {
-      frames.forEach((frame) => {
-        frame.style.setProperty("--frame-reveal", "100%");
-      });
-      return;
-    }
-
-    // A CSS custom property is tweened rather than clip-path directly: the clip
-    // reads the variable, so the browser still only animates a composited change.
-    const ctx = gsap.context(() => {
-      gsap.set(frames, { "--frame-reveal": "0%" });
-      ScrollTrigger.batch(frames, {
-        start: "top 88%",
-        once: true,
-        onEnter: (batch) =>
-          gsap.to(batch, {
-            "--frame-reveal": "100%",
-            duration: 1.25,
-            ease: "power3.out",
-            stagger: 0.1,
-            overwrite: true,
-          }),
-      });
-    }, root);
-
-    return () => ctx.revert();
-  }, []);
 
   function step(delta: number) {
     setActiveIndex((current) => {
@@ -138,47 +103,51 @@ function GalleryFrame({
           frame.span === "tall" && "sm:w-3/4 lg:w-1/2",
           isHalf && "sm:w-full",
         )}
-        style={
-          {
-            // Clipped from the bottom edge; the frame opens upward as it arrives.
-            "--frame-reveal": "0%",
-            clipPath: "inset(0 0 var(--frame-reveal) 0)",
-          } as React.CSSProperties
-        }
       >
-        <button
-          type="button"
-          onClick={onOpen}
-          data-cursor="view"
-          aria-label={`View ${frame.meta} — ${frame.caption}`}
-          className="absolute inset-0 block h-full w-full cursor-none text-left"
+        {/*
+          Curtain reveal. Oversized frames open with a single edge wipe and the
+          smaller ones with a five-panel curtain, so the two dominant frame types
+          on the page do not arrive by the same gesture.
+        */}
+        <CurtainReveal
+          className="absolute inset-0"
+          panels={frame.span === "full" ? 1 : 5}
+          origin={frame.span === "full" ? "bottom" : "center"}
         >
-          <Image
-            src={frame.src}
-            alt={frame.alt}
-            fill
-            loading={index < 3 ? "eager" : "lazy"}
-            sizes={
-              frame.span === "full"
-                ? "(max-width: 640px) 92vw, (max-width: 1024px) 88vw, 74vw"
-                : "(max-width: 640px) 92vw, (max-width: 1024px) 44vw, 34vw"
-            }
-            className="object-cover transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]"
-          />
-
-          {/* Caption panel wipes up on hover, desktop only. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full items-end justify-between gap-6 bg-linear-to-t from-background-sunken/92 via-background-sunken/55 to-transparent px-7 pb-7 pt-20 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0 lg:flex"
+          <button
+            type="button"
+            onClick={onOpen}
+            data-cursor="view"
+            aria-label={`View ${frame.meta} — ${frame.caption}`}
+            className="absolute inset-0 block h-full w-full cursor-none text-left"
           >
-            <span className="max-w-sm text-pretty leading-snug text-foreground">
-              {frame.caption}
+            <Image
+              src={frame.src}
+              alt={frame.alt}
+              fill
+              loading={index < 3 ? "eager" : "lazy"}
+              sizes={
+                frame.span === "full"
+                  ? "(max-width: 640px) 92vw, (max-width: 1024px) 88vw, 74vw"
+                  : "(max-width: 640px) 92vw, (max-width: 1024px) 44vw, 34vw"
+              }
+              className="object-cover transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]"
+            />
+
+            {/* Caption panel wipes up on hover, desktop only. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full items-end justify-between gap-6 bg-linear-to-t from-background-sunken/92 via-background-sunken/55 to-transparent px-7 pb-7 pt-20 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0 lg:flex"
+            >
+              <span className="max-w-sm text-pretty leading-snug text-foreground">
+                {frame.caption}
+              </span>
+              <span className="micro shrink-0 text-accent-bright">
+                {String(index + 1).padStart(2, "0")}
+              </span>
             </span>
-            <span className="micro shrink-0 text-accent-bright">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-          </span>
-        </button>
+          </button>
+        </CurtainReveal>
       </div>
 
       {/* Caption rail. Always visible on touch, where there is no hover. */}
