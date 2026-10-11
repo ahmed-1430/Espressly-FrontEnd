@@ -14,7 +14,7 @@
     "verify:reveals": "node scripts/verify-reveals.cjs",
     "verify:interactions": "node scripts/verify-interactions.cjs",
     "verify:layout": "node scripts/verify-layout.cjs",
-    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress && npm run verify:anchors && npm run verify:horizontal && npm run verify:transition && npm run verify:flip-text && npm run audit:menu",
+    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress && npm run verify:anchors && npm run verify:horizontal && npm run verify:transition && npm run verify:flip-text && npm run audit:menu && npm run audit:gallery",
     "audit:assets": "node scripts/audit-assets.cjs",
     "shoot": "node scripts/shoot.cjs",
     "assets:alt": "node scripts/verify-gallery-alt.cjs",
@@ -26,6 +26,7 @@
     "audit:code": "node scripts/audit-dead-code.cjs",
     "verify:horizontal": "node scripts/verify-horizontal.cjs",
     "verify:flip-text": "node scripts/verify-flip-text.cjs",
+    "audit:gallery": "node scripts/audit-gallery-images.cjs",
     "audit:menu": "node scripts/audit-menu-images.cjs",
     "verify:transition": "node scripts/verify-page-transition.cjs",
     "walk": "node scripts/walk-page.cjs"

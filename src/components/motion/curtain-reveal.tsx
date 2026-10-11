@@ -120,21 +120,17 @@ export function CurtainReveal({
 
   return (
     <div ref={ref} className={className} data-curtain={panels}>
-      <motion.div
-        className="relative h-full w-full"
-        data-curtain-body=""
-        initial={false}
-        animate={
-          reduce
-            ? undefined
-            : inView
-              ? { scale: 1, opacity: 1 }
-              : { scale: 1.06, opacity: 0 }
-        }
-        transition={{ duration: duration * 1.1, ease: [0.16, 1, 0.3, 1], delay }}
-      >
+      {/*
+        The subject is never animated. An earlier version faded the whole body
+        from opacity 0 and scaled it up, which meant the photograph arrived as a
+        fade rather than being uncovered — the curtain was decorative on top of a
+        plain fade, and the requirement is that the mask reveals the image itself.
+        Here the image is fully painted at all times and the panels alone decide
+        whether the reader can see it.
+      */}
+      <div className="relative h-full w-full" data-curtain-body="">
         {children}
-      </motion.div>
+      </div>
 
       {/* The curtains themselves. aria-hidden and pointer-events-none: they carry
           no meaning and must never intercept a click on the photograph. */}

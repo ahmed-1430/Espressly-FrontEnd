@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
 import { GalleryHero } from "@/components/hero/gallery-hero";
 import { GalleryGrid } from "@/components/gallery/gallery-grid";
-import { HorizontalFrames } from "@/components/gallery/horizontal-frames";
-import { Container } from "@/components/layout/container";
-import { galleryFrames } from "@/data/gallery";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description:
-    "Photographs of the Espressly bar, the long room, the pastry board and the people behind it. Shot on film and on a Tuesday morning in Queen Street.",
+    "Photographs of the Espressly bar, the roast and the room. Shot on film and on a Tuesday morning in Queen Street.",
   alternates: { canonical: "/gallery" },
   openGraph: {
     title: `Gallery — ${siteConfig.name}`,
-    description: "The room, the bar, the roast, and the people who work it.",
+    description: "The bar, the roast and the room, in nine photographs.",
     url: "/gallery",
   },
 };
@@ -23,27 +20,31 @@ export default function GalleryPage() {
     <>
       <GalleryHero />
 
-      {/* The whole set at once, travelling. A change of pace before the spreads. */}
-      <HorizontalFrames />
+      {/*
+        The pinned contact-sheet band that used to sit here has been removed. It
+        rendered twelve of the same frames as a scrolling strip, directly between
+        two sections that showed the same frames again — the single largest
+        contributor to the page reading as endless, and the reason a visitor saw
+        the same photograph three times before reaching the lightbox.
+      */}
+      <section
+        id="frames"
+        aria-label="Photographs"
+        className="mx-auto w-full max-w-[110rem] px-5 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20"
+      >
+        <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-6">
+          <h2 className="font-display text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-display">
+            The set
+          </h2>
+          <p className="micro text-muted-foreground">
+            Select any frame to open the viewer
+          </p>
+        </div>
 
-      {/* Asymmetric: the band above already ends with its own generous padding, so
-          equal top padding here stacked into roughly 250px of dead space between
-          the last frame and this rail. */}
-      <Container className="pt-10 pb-20 sm:pt-12 sm:pb-24 lg:pt-14 lg:pb-32">
-        <div id="frames" className="flex flex-col gap-10">
-          {/* Rail between the exhibition hero and the frames themselves. */}
-          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-6">
-            <h2 className="font-display text-[clamp(1.5rem,3.2vw,2.25rem)] tracking-display">
-              {galleryFrames.length} frames
-            </h2>
-            <p className="micro text-muted-foreground">
-              Select any frame to open the viewer
-            </p>
-          </div>
-
+        <div className="mt-10 sm:mt-14">
           <GalleryGrid />
         </div>
-      </Container>
+      </section>
     </>
   );
 }

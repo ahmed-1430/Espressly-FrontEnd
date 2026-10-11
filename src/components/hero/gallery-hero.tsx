@@ -1,153 +1,84 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
-import { HeroMedia, HeroMeta, HeroScrollCue } from "./hero-atoms";
-import { HeroEntrance, HeroExit } from "./hero-motion";
+import { SplitLines } from "@/components/motion/split-lines";
 import { galleryFrames } from "@/data/gallery";
-import { cn } from "@/lib/cn";
 
 /**
- * GALLERY hero — "the exhibition".
+ * GALLERY masthead — compact.
  *
- * There is no conventional masthead here on purpose. The first viewport is a
- * single full-bleed frame with the title set into the lower third of the image
- * rather than beside it, three supporting thumbnails overlapping its bottom edge,
- * and a caption rail. A visitor should be looking at photography before they have
- * read anything.
+ * The earlier hero was a full-bleed photograph at `100vw` with a 13rem title set
+ * into it, three overlapping thumbnails, and a metadata rail: the same structure
+ * every other inner page used, which is precisely what made the site read as one
+ * template. It also spent the first viewport re-showing three frames the spreads
+ * below showed again.
  *
- * The overlapping thumbnails are the same frames that open the grid below, which
- * makes the hero read as the first spread rather than a separate section.
+ * This is a wall label instead. Type, a count, and the first frame immediately
+ * below it — so the reader is looking at photography within the opening viewport,
+ * without a full-height image standing between them and it.
  */
 export function GalleryHero() {
   const rootRef = useRef<HTMLElement>(null);
-  const supporting = galleryFrames.slice(1, 4);
 
   return (
     <section
       ref={rootRef}
       aria-labelledby="gallery-hero-title"
-      className="relative isolate overflow-hidden border-b border-border pt-16 lg:pt-[76px]"
+      className="border-b border-border pt-16 lg:pt-[76px]"
     >
-      <HeroMedia
-        src="/images/hero-counter.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        parallax={14}
-        className="absolute inset-0 -z-10 h-full w-full"
-      >
-        {/*
-          Two scrims, because the photograph is busy in two directions: a
-          bottom-up wash for the title and thumbnails that sit low in the frame,
-          and a left-to-right wash so the copy column keeps a ground to sit on.
-          A single gradient would leave the lede unreadable against the bulbs.
-        */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-t from-background-sunken via-background-sunken/55 to-background-sunken/45"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-r from-background-sunken/92 via-background-sunken/45 to-transparent"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-background-sunken to-transparent"
-        />
-      </HeroMedia>
+      <div className="mx-auto w-full max-w-[110rem] px-5 pb-12 pt-10 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+          <div>
+            <div className="flex items-center gap-4">
+              <span aria-hidden className="h-px w-8 bg-accent" />
+              <span className="eyebrow">Photography</span>
+            </div>
 
-      {/* Caption rail, top-left — reads as a gallery wall label. */}
-      <div
-        data-hero-stage="eyebrow"
-        className="mx-auto flex w-full max-w-[110rem] items-center justify-between gap-6 px-5 pt-8 sm:px-8 lg:px-12"
-      >
-        <p className="micro text-foreground-soft">Espressly — Photography</p>
-        <p className="micro hidden text-muted-foreground sm:block">
-          Shot on film and on a Tuesday
-        </p>
-      </div>
-
-      <div className="mx-auto w-full max-w-[110rem] px-5 pb-0 pt-16 sm:px-8 sm:pt-24 lg:px-12">
-        <h1
-          id="gallery-hero-title"
-          className="font-display text-[clamp(3.75rem,15vw,13rem)] leading-[0.82] tracking-display"
-        >
-          <span className="block overflow-hidden">
-            <span data-hero-stage="title" className="block">
-              Gallery
-            </span>
-          </span>
-        </h1>
-
-        <p
-          data-hero-stage="copy"
-          className="mt-8 max-w-md text-pretty text-[clamp(0.9375rem,1.2vw,1.0625rem)] leading-relaxed text-foreground-soft"
-        >
-          The room, the bar, the roast, and the people who work them.
-        </p>
-
-        {/* Supporting frames overlapping the bottom edge of the hero image. */}
-        <ul
-          data-hero-stage="meta"
-          // Small by design — a supporting strip, not a gallery frame.
-          data-decorative-thumb
-          className="mt-12 grid grid-cols-3 gap-3 sm:mt-16 sm:gap-5 lg:max-w-3xl lg:gap-6"
-        >
-          {supporting.map((frame, index) => (
-            <li
-              key={frame.id}
-              className={cn(
-                "relative aspect-4/5 overflow-hidden bg-background-raised",
-                index === 1 && "lg:-translate-y-8",
-              )}
+            <h1
+              id="gallery-hero-title"
+              className="mt-6 font-display text-[clamp(3rem,10vw,7.5rem)] leading-[0.86] tracking-display"
             >
-              <Image
-                src={frame.src}
-                alt={frame.alt}
-                fill
-                sizes="(max-width: 640px) 30vw, 12vw"
-                className="object-cover"
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+              <SplitLines lines={["Gallery"]} duration={1.1} />
+            </h1>
+          </div>
 
-      {/* Metadata sits below the overlapping frames on a solid ground. */}
-      <div className="relative mt-12 bg-background pb-10 pt-10 sm:mt-16 lg:mt-0 lg:pb-12">
-        <div className="mx-auto w-full max-w-[110rem] px-5 sm:px-8 lg:px-12">
-          <div className="flex items-end justify-between gap-8">
-            <HeroMeta
-              items={[
-                { label: "Frames", value: String(galleryFrames.length).padStart(2, "0") },
-                { label: "Period", value: "2019 — 2026" },
-                { label: "Studio", value: "Queen St W" },
-              ]}
-              className="flex-1 border-t-0 pt-0"
-            />
-            <a href="#frames" className="hidden shrink-0 sm:block">
-              <HeroScrollCue label="View all" />
-            </a>
+          <div className="max-w-sm lg:pb-3 lg:text-right">
+            <p className="text-pretty text-[clamp(0.9375rem,1.2vw,1.0625rem)] leading-relaxed text-foreground-soft">
+              Nine photographs of the bar, the roast and the room.
+            </p>
+
+            <dl className="mt-6 flex items-end gap-8 lg:justify-end">
+              <div>
+                <dt className="micro text-muted-foreground">Frames</dt>
+                <dd className="mt-1 font-display text-2xl text-accent">
+                  {String(galleryFrames.length).padStart(2, "0")}
+                </dd>
+              </div>
+              <div>
+                <dt className="micro text-muted-foreground">Period</dt>
+                <dd className="mt-1 font-display text-2xl">2019—26</dd>
+              </div>
+              {/*
+                Kept as a real in-page link rather than a decorative scroll cue:
+                the masthead is compact, so there is little to scroll past, but a
+                keyboard user still wants a way to reach the photographs directly
+                and `verify:anchors` checks this resolves without a native jump.
+              */}
+              <div className="hidden sm:block">
+                <dt className="micro text-muted-foreground">&nbsp;</dt>
+                <dd className="mt-1">
+                  <a
+                    href="#frames"
+                    className="text-sm text-foreground underline decoration-accent/60 underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"
+                  >
+                    View the set
+                  </a>
+                </dd>
+              </div>
+            </dl>
           </div>
         </div>
       </div>
-
-      <HeroEntrance
-        rootRef={rootRef}
-        choreography={{
-          stages: ["eyebrow", "title", "copy", "meta"],
-          stagger: 0.14,
-          duration: 1.35,
-        }}
-      />
-      <HeroExit
-        rootRef={rootRef}
-        targets={[
-          { selector: '[data-hero-stage="title"]', yPercent: -18, opacity: 0.2 },
-        ]}
-      />
     </section>
   );
 }
