@@ -25,7 +25,7 @@ const check = (label, ok, detail = "") => {
   await new Promise((r) => setTimeout(r, 1200));
 
   const probe = await page.evaluate(() => {
-    const wrapper = document.querySelector('[aria-hidden="true"].fixed.top-0');
+    const wrapper = document.querySelector('[data-scroll-progress]');
     const nav = document.querySelector("header");
     if (!wrapper) return { found: false };
     const bar = wrapper.firstElementChild;
@@ -62,7 +62,7 @@ const check = (label, ok, detail = "") => {
   // Advance and confirm the fill grows.
   const readScale = () =>
     page.evaluate(() => {
-      const bar = document.querySelector('[aria-hidden="true"].fixed.top-0')?.firstElementChild;
+      const bar = document.querySelector('[data-scroll-progress]')?.firstElementChild;
       if (!bar) return null;
       const m = new DOMMatrixReadOnly(getComputedStyle(bar).transform);
       return m.a;

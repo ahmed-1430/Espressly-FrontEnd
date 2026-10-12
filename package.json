@@ -14,7 +14,7 @@
     "verify:reveals": "node scripts/verify-reveals.cjs",
     "verify:interactions": "node scripts/verify-interactions.cjs",
     "verify:layout": "node scripts/verify-layout.cjs",
-    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress && npm run verify:anchors && npm run verify:horizontal && npm run verify:transition && npm run verify:flip-text && npm run audit:menu && npm run audit:gallery && npm run audit:heroes && npm run verify:hero-media && npm run audit:duplication && npm run verify:desktop-motion",
+    "verify": "npm run verify:interactions && npm run verify:layout && npm run verify:reveals && npm run verify:console && npm run verify:motion && npm run verify:progress && npm run verify:anchors && npm run verify:horizontal && npm run verify:transition && npm run verify:flip-text && npm run audit:menu && npm run audit:gallery && npm run audit:heroes && npm run verify:hero-media && npm run audit:duplication && npm run verify:desktop-motion && npm run verify:cursor",
     "audit:assets": "node scripts/audit-assets.cjs",
     "shoot": "node scripts/shoot.cjs",
     "assets:alt": "node scripts/verify-gallery-alt.cjs",
@@ -33,7 +33,8 @@
     "walk": "node scripts/walk-page.cjs",
     "verify:hero-media": "node scripts/verify-hero-media.cjs",
     "audit:duplication": "node scripts/audit-duplication.cjs",
-    "verify:desktop-motion": "node scripts/verify-desktop-motion.cjs"
+    "verify:desktop-motion": "node scripts/verify-desktop-motion.cjs",
+    "verify:cursor": "node scripts/verify-cursor.cjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

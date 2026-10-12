@@ -57,6 +57,11 @@ export function ScrollProgress() {
   return (
     <div
       aria-hidden
+      // A stable hook. `verify:progress` used to find this by the shape
+      // `[aria-hidden="true"].fixed.top-0`, which the custom cursor's ring also
+      // matches — and the ring renders first, so the gate began asserting against
+      // a 30px circle instead of the 1px bar. Identity beats class-shape.
+      data-scroll-progress=""
       className="pointer-events-none fixed inset-x-0 top-0 z-[140] h-px"
     >
       <div
