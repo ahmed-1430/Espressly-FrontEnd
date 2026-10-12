@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, motionPresets, prefersReducedMotion } from "@/lib/gsap";
-import { location, siteConfig } from "@/config/site";
+// import { location, siteConfig } from "@/config/site";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/ui/button";
 import { SplitLines } from "@/components/motion/split-lines";
 import { Magnetic } from "@/components/motion/magnetic";
-import { formatCoordinates } from "@/lib/cn";
+// import { formatCoordinates } from "@/lib/cn";
 
 /**
  * Home hero.
@@ -119,14 +119,14 @@ export function HomeHero() {
 
       <Container className="relative z-10 w-full">
         <div data-hero-content className="max-w-4xl">
-          <div
+          {/* <div
             data-hero-meta
             className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground"
           >
             <span className="micro text-accent-bright">Est. {siteConfig.founded}</span>
             <span aria-hidden className="h-px w-6 bg-border-strong" />
             <span className="micro">{location.district}</span>
-          </div>
+          </div> */}
 
           <h1 className="mt-8 text-[clamp(2.75rem,11.5vw,9.5rem)] tracking-display">
             <SplitLines
@@ -177,12 +177,12 @@ export function HomeHero() {
           data-hero-scroll
           className="mt-14 flex items-end justify-between gap-6 border-t border-border pt-6"
         >
-          <p className="micro text-muted-foreground">
+          {/* <p className="micro text-muted-foreground">
             Open today {siteConfig.phoneDisplay}
-          </p>
-          <p className="micro text-muted-foreground sm:hidden">
+          </p> */}
+          {/* <p className="micro text-muted-foreground sm:hidden">
             {formatCoordinates(location.coordinates.latitude, location.coordinates.longitude)}
-          </p>
+          </p> */}
           {/*
             The scroll cue is a pointer affordance. Touch devices get the
             coordinates instead, which is the detail worth carrying on a phone.
