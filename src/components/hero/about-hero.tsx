@@ -1,17 +1,22 @@
 "use client";
 
 import { useRef } from "react";
-import { HeroEyebrow, HeroMedia, HeroMeta } from "./hero-atoms";
-import { HeroEntrance, HeroExit } from "./hero-motion";
-import { siteConfig } from "@/config/site";
+import { HeroMedia, HeroMeta } from "./hero-atoms";
+import { HeroEntrance } from "./hero-motion";
+import { SplitLines } from "@/components/motion/split-lines";
 
 /**
- * ABOUT hero — "the band".
+ * ABOUT hero — asymmetric, and the photograph is allowed to be small.
  *
- * A wide photographic band with the founding statement set against it and the
- * page title running alongside rather than above. The reading order is
- * title → statement → band, which is the order the story actually happens in,
- * and it avoids the same left-text/right-image arrangement the other heroes use.
+ * The previous version was the same full-bleed band as the other inner pages,
+ * with the statement laid across the bottom of it. Its own comment claimed it
+ * "avoids the same left-text/right-image arrangement the other heroes use", which
+ * was not true of the outer composition — only of the order of two elements
+ * inside it.
+ *
+ * Now the image is a tall, narrow panel set hard against the right margin and
+ * pulled up above the text baseline, so the two masses are deliberately unequal
+ * and out of alignment. There is no background photograph and no scrim.
  */
 export function AboutHero() {
   const rootRef = useRef<HTMLElement>(null);
@@ -20,106 +25,64 @@ export function AboutHero() {
     <section
       ref={rootRef}
       aria-labelledby="about-hero-title"
-      className="relative border-b border-border bg-background pt-28 lg:pt-36"
+      className="relative border-b border-border pt-16 lg:pt-[76px]"
     >
-      <div className="mx-auto w-full max-w-[110rem] px-5 sm:px-8 lg:px-12">
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-4 lg:pt-4">
-            <HeroEyebrow data-hero-stage="eyebrow">
-              Since {siteConfig.founded}
-            </HeroEyebrow>
+      <div className="mx-auto w-full max-w-[110rem] px-5 pb-12 pt-10 sm:px-8 sm:pb-16 lg:px-12">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-7 lg:pb-4">
+            <div className="flex items-center gap-4">
+              <span aria-hidden className="h-px w-8 bg-accent" />
+              <span className="eyebrow">Since 2019</span>
+            </div>
 
             <h1
               id="about-hero-title"
-              className="mt-7 font-display text-[clamp(3rem,10vw,8rem)] leading-[0.86] tracking-display"
+              className="mt-6 font-display text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.88] tracking-display"
             >
-              <span className="block overflow-hidden">
-                <span data-hero-stage="title" className="block">
-                  About
-                </span>
-              </span>
-              <span
-                data-hero-stage="title"
-                className="block pl-[0.08em] text-accent-bright italic"
-              >
-                Us
-              </span>
+              <SplitLines lines={["A small", "room with", "a long"]} duration={1.05} />
             </h1>
+
+            <p
+              data-hero-stage="copy"
+              className="mt-7 max-w-lg text-pretty text-[clamp(1.0625rem,1.6vw,1.375rem)] leading-relaxed text-foreground-soft"
+            >
+              One bar, three grinders, and a roast we publish every Wednesday.
+            </p>
           </div>
 
           {/*
-            The statement is the hero. It is the only text on the page that is set
-            at reading size before any scroll, because the point of this page is
-            the argument, not the heading.
+            Narrow and tall, and lifted above the text rather than aligned to it.
+            The misalignment is the composition: two equal blocks side by side is
+            the arrangement every other hero on this site had settled into.
           */}
-          <div className="lg:col-span-7 lg:col-start-6">
-            <p
-              data-hero-stage="copy"
-              className="max-w-2xl font-display text-[clamp(1.5rem,2.9vw,2.5rem)] leading-[1.18] tracking-display text-foreground"
-            >
-              We are a small coffee house on Queen Street that never quite finished
-              opening. Three years later it is still the same idea:{" "}
-              <span className="text-accent-bright italic">
-                one blend, roasted on site, in a room built for staying.
-              </span>
-            </p>
-
-            <p
-              data-hero-stage="actions"
-              className="mt-8 max-w-xl text-pretty leading-relaxed text-muted-foreground"
-            >
-              It began with a second-hand lever machine, a sheet of card for a sign,
-              and a stubborn refusal to serve coffee we would not drink ourselves.
-              That has stayed the whole idea.
-            </p>
+          <div className="lg:col-span-4 lg:col-start-9">
+            <div className="relative aspect-4/5 overflow-hidden bg-background-raised lg:-mt-16">
+              <HeroMedia
+                src="/images/space-counter.jpg"
+                alt="A barista working behind a white brick counter lined with shelves and stock."
+                fill
+                priority
+                parallax={0}
+                sizes="(max-width: 1024px) 92vw, 28vw"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Wide band, deliberately wider than the text block above it. */}
-      <div className="mx-auto mt-14 w-full max-w-[110rem] px-5 pb-0 sm:mt-20 sm:px-8 lg:mt-24 lg:px-12">
-        <HeroMedia
-          src="/images/space-counter.jpg"
-          alt="A barista working behind a white brick counter lined with shelves and stock."
-          fill
-          priority
-          sizes="(max-width: 640px) 92vw, (max-width: 1760px) 88vw, 1680px"
-          parallax={9}
-          delay={0.25}
-          className="aspect-16/9 w-full sm:aspect-21/8"
-        >
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-linear-to-t from-background-sunken/45 to-transparent"
+        <div className="mt-12">
+          <HeroMeta
+            items={[
+              { label: "Founded", value: "2019" },
+              { label: "Room", value: "Queen St W, Toronto" },
+              { label: "Roast day", value: "Wednesday" },
+            ]}
           />
-        </HeroMedia>
-      </div>
-
-      <div className="mx-auto mt-12 w-full max-w-[110rem] px-5 pb-12 sm:px-8 lg:mt-14 lg:px-12 lg:pb-14">
-        <HeroMeta
-          items={[
-            { label: "Founded", value: String(siteConfig.founded) },
-            { label: "Baristas", value: "9" },
-            { label: "Blends tried", value: "11" },
-            { label: "Roasted", value: "On site" },
-          ]}
-        />
+        </div>
       </div>
 
       <HeroEntrance
         rootRef={rootRef}
-        choreography={{
-          stages: ["eyebrow", "title", "copy", "actions", "meta"],
-          stagger: 0.1,
-          duration: 1.2,
-        }}
-      />
-      <HeroExit
-        rootRef={rootRef}
-        targets={[
-          { selector: '[data-hero-stage="title"]', yPercent: -16, opacity: 0.25 },
-          { selector: '[data-hero-stage="copy"]', yPercent: -10, opacity: 0.3 },
-        ]}
+        choreography={{ stages: ["copy"], stagger: 0.12, duration: 1.1 }}
       />
     </section>
   );

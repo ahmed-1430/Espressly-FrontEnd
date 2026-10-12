@@ -78,7 +78,7 @@ export function HomeHero() {
   return (
     <section
       ref={rootRef}
-      className="noise relative flex min-h-[100svh] items-end overflow-hidden pb-12 pt-28 sm:pb-16 lg:min-h-dvh lg:pb-20"
+      className="noise relative flex min-h-svh items-end overflow-hidden pb-12 pt-28 sm:pb-16 lg:min-h-dvh lg:pb-20"
       aria-label="Espressly — specialty coffee, crafted with intention"
     >
       <div className="absolute inset-0 overflow-hidden">
@@ -105,11 +105,11 @@ export function HomeHero() {
         <div
           data-hero-scrim
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-background-sunken via-background-sunken/45 to-background-sunken/70"
+          className="absolute inset-0 bg-linear-to-t from-background-sunken via-background-sunken/45 to-background-sunken/70"
         />
         <div
           aria-hidden
-          className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-background-sunken/85 to-transparent"
+          className="absolute inset-x-0 top-0 h-56 bg-linear-to-b from-background-sunken/85 to-transparent"
         />
         <div
           aria-hidden

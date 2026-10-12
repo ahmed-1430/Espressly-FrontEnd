@@ -36,7 +36,7 @@ export function GalleryHero() {
 
             <h1
               id="gallery-hero-title"
-              className="mt-6 font-display text-[clamp(3rem,10vw,7.5rem)] leading-[0.86] tracking-display"
+              className="mt-6 font-display text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.88] tracking-display"
             >
               <SplitLines lines={["Gallery"]} duration={1.1} />
             </h1>

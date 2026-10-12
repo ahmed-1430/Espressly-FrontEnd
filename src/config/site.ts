@@ -8,7 +8,7 @@
 export const siteConfig = {
   name: "Espressly",
   wordmark: "Espressly",
-  tagline: "Specialty coffee, crafted with intention.",
+  tagline: "Specialty coffee,made with care.",
   description:
     "Espressly is a specialty coffee house built around a single espresso blend, slow-roasted weekly and pulled to order. Read the menu, browse the shop, and find us downtown.",
   shortDescription:

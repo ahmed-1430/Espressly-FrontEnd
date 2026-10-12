@@ -1,176 +1,107 @@
 "use client";
 
-import Link from "next/link";
 import { useRef } from "react";
-import { HeroEyebrow, HeroMedia, HeroMeta, HeroScrollCue } from "./hero-atoms";
-import { HeroEntrance, HeroExit } from "./hero-motion";
-import { ButtonLink } from "@/components/ui/button";
+import { HeroMedia, HeroScrollCue } from "./hero-atoms";
+import { HeroEntrance } from "./hero-motion";
+import { SplitLines } from "@/components/motion/split-lines";
 import { cn } from "@/lib/cn";
-import { menuCategories, menuItems } from "@/data/menu";
 
 /**
- * MENU hero — "the editorial stack".
+ * MENU hero — product, not photograph.
  *
- * Full-bleed espresso photography carrying an oversized MENU that overlaps the
- * frame rather than sitting beside it, with the category list running down the
- * right as a table of contents. The intent is that the page states its own
- * importance in the first viewport: this is the thing the café is for.
+ * This was the most templated of the six: `min-h-[92svh]`, a full-bleed bar
+ * photograph behind two gradient scrims, and a 15rem title. On the one page whose
+ * subject is forty-six products, that spent an entire viewport on atmosphere and
+ * pushed the first price below the fold.
  *
- * Choreography runs metadata first and the title last, so the word lands after
- * the room has already been established.
+ * Now: a compact masthead with the featured drinks as real images in the layout
+ * rather than as a backdrop, and the category rail immediately below so the first
+ * viewport already offers a way into the menu. Nothing here is centred.
  */
 export function MenuHero() {
   const rootRef = useRef<HTMLElement>(null);
 
-  const signatureCount = menuItems.filter((item) => item.signature).length;
+  // Three drinks from the set, so the hero shows the actual range rather than
+  // three crops of the same hero photograph.
+  const featured = [
+    { src: "/images/menu-espresso.jpg", alt: "A short espresso in a clear cup, crema settled on top." },
+    { src: "/images/menu-flat-white.jpg", alt: "A flat white with a rosetta poured into the milk." },
+    { src: "/images/food-croissant.jpg", alt: "Two croissants on a dark bench with flour still falling around them." },
+  ];
 
   return (
     <section
       ref={rootRef}
       aria-labelledby="menu-hero-title"
-      className="noise relative isolate min-h-[92svh] overflow-hidden border-b border-border pt-28 lg:min-h-dvh lg:pt-32"
+      className="relative border-b border-border pt-16 lg:pt-[76px]"
     >
-      {/* Media bleeds behind the type; the scrim only has to hold legibility. */}
-      <HeroMedia
-        src="/images/craft-machine.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        parallax={10}
-        delay={0}
-        className="absolute inset-0 -z-10 h-full w-full"
-      >
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-t from-background-sunken via-background-sunken/60 to-background-sunken/45"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-r from-background-sunken/90 via-background-sunken/40 to-transparent"
-        />
-      </HeroMedia>
+      <div className="mx-auto w-full max-w-[110rem] px-5 pb-10 pt-10 sm:px-8 sm:pb-14 lg:px-12">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-4">
+              <span aria-hidden className="h-px w-8 bg-accent" />
+              <span className="eyebrow">Queen St W</span>
+            </div>
 
-      <div className="mx-auto flex w-full max-w-[110rem] flex-col px-5 pb-12 sm:px-8 lg:px-12 lg:pb-16">
-        <div className="grid flex-1 items-end gap-12 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-8">
-            <HeroEyebrow data-hero-stage="eyebrow" className="mb-8">
-              Espressly — Queen Street
-            </HeroEyebrow>
-
-            {/*
-              The title is split by hand rather than by line detection: the mask
-              reveal needs stable line boxes, and the break after "Our" is the
-              editorial one anyway.
-            */}
             <h1
               id="menu-hero-title"
-              className="font-display text-[clamp(4.25rem,17vw,15rem)] leading-[0.82] tracking-display"
+              className="mt-6 font-display text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.88] tracking-display"
             >
-              <span className="block overflow-hidden">
-                <span data-hero-stage="title" className="block">
-                  Our
-                </span>
-              </span>
-              <span
-                data-hero-stage="title"
-                className="block pl-[0.06em] text-accent-bright italic"
-              >
-                Menu
-              </span>
+              <SplitLines lines={["The", "menu"]} duration={1.05} />
             </h1>
-
-            <div
-              data-hero-stage="rule"
-              aria-hidden
-              className="mt-10 h-px w-full max-w-md bg-linear-to-r from-accent to-transparent"
-            />
 
             <p
               data-hero-stage="copy"
-              className="mt-8 max-w-lg text-pretty text-[clamp(1rem,1.35vw,1.1875rem)] leading-relaxed text-foreground-soft"
+              className="mt-7 max-w-md text-pretty leading-relaxed text-foreground-soft"
             >
-              Eight categories, one very short list. Everything here is roasted on
-              site and pulled on a three-group lever, and the seasonal board changes
-              when the week does.
+              Espresso and filter, milk and pastry, and a short seasonal list that
+              changes when the beans do.
             </p>
-
-            <div data-hero-stage="actions" className="mt-10 flex flex-wrap items-center gap-4">
-              <ButtonLink href="#categories" variant="primary" arrow>
-                Read the list
-              </ButtonLink>
-              <Link
-                href="/shop"
-                className="link-sweep text-xs font-medium uppercase tracking-[0.18em] text-foreground-soft hover:text-foreground"
-              >
-                Beans to take home
-              </Link>
-            </div>
           </div>
 
-          {/* Table of contents. Hidden on mobile, where it would just add a scroll. */}
-          <nav
-            aria-label="Menu categories"
-            data-hero-stage="meta"
-            className="hidden lg:col-span-4 lg:block"
-          >
-            <p className="micro mb-5 text-muted-foreground">In this menu</p>
-            <ol className="border-t border-border">
-              {menuCategories.map((category, index) => (
+          {/*
+            Three drinks as a stepped block rather than a row: each is narrower
+            and lower than the last, so the eye travels down and across instead of
+            reading a strip of equal tiles.
+          */}
+          <div className="lg:col-span-5">
+            <ul className="flex items-end gap-4">
+              {featured.map((drink, index) => (
                 <li
-                  key={category.id}
-                  className="flex items-baseline gap-4 border-b border-border py-2.5"
+                  key={drink.src}
+                  className={cn(
+                    "relative overflow-hidden bg-background-raised",
+                    "aspect-3/4 w-1/3",
+                    index === 1 && "sm:w-[38%]",
+                    index === 2 && "sm:w-[46%]",
+                  )}
                 >
-                  <span className="micro w-6 shrink-0 text-accent">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-sm text-foreground-soft">
-                    {category.label}
-                  </span>
-                  <span className="ml-auto micro text-muted-foreground">
-                    {String(
-                      menuItems.filter((item) => item.category === category.id).length,
-                    ).padStart(2, "0")}
-                  </span>
+                  <HeroMedia
+                    src={drink.src}
+                    alt={drink.alt}
+                    fill
+                    priority={index === 0}
+                    parallax={0}
+                    delay={0.08 * index}
+                    sizes="(max-width: 640px) 28vw, 14vw"
+                  />
                 </li>
               ))}
-            </ol>
-          </nav>
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-14 flex items-end justify-between gap-6">
-          <HeroMeta
-            items={[
-              { label: "Categories", value: String(menuCategories.length).padStart(2, "0") },
-              { label: "Items", value: String(menuItems.length).padStart(2, "0") },
-              {
-                label: "Signatures",
-                value: String(signatureCount).padStart(2, "0"),
-              },
-              { label: "Kitchen until", value: "15:00" },
-            ]}
-            className={cn("flex-1 border-t-0 pt-0")}
-          />
-          <a href="#categories" className="hidden shrink-0 sm:block">
-            <HeroScrollCue />
+        <div className="mt-10 flex items-center justify-between gap-6 border-t border-border pt-6">
+          <a href="#categories" className="shrink-0">
+            <HeroScrollCue label="Browse the list" />
           </a>
+          <p className="micro text-muted-foreground">Prices include VAT</p>
         </div>
       </div>
 
       <HeroEntrance
         rootRef={rootRef}
-        choreography={{
-          stages: ["meta", "eyebrow", "title", "rule", "copy", "actions", "cue"],
-          stagger: 0.11,
-          duration: 1.1,
-        }}
-      />
-      <HeroExit
-        rootRef={rootRef}
-        targets={[
-          { selector: '[data-hero-stage="title"]', yPercent: -22, opacity: 0.15 },
-          { selector: '[data-hero-stage="copy"]', yPercent: -12, opacity: 0.2 },
-        ]}
+        choreography={{ stages: ["copy", "meta"], stagger: 0.12, duration: 1.1 }}
       />
     </section>
   );

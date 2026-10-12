@@ -19,6 +19,7 @@ export function HeroMedia({
   children,
   className,
   mediaClassName,
+  imageClassName,
   parallax = 8,
   delay = 0,
   alt,
@@ -27,6 +28,12 @@ export function HeroMedia({
   children?: ReactNode;
   className?: string;
   mediaClassName?: string;
+  /**
+   * Classes for the `<img>` itself. The image always gets `object-cover`; this is
+   * merged in rather than passed as `className`, because `className` is applied to
+   * the frame and the props spread would otherwise be silently overwritten.
+   */
+  imageClassName?: string;
   /** Percentage of vertical travel across the hero's scroll range. */
   parallax?: number;
   /** Seconds before the mask begins to open. */
@@ -95,7 +102,12 @@ export function HeroMedia({
     <div
       ref={frameRef}
       data-hero-media
-      className={cn("hero-media relative overflow-hidden", className)}
+      // `h-full w-full` is required whenever the parent is not itself absolutely
+      // positioned. The only child is `absolute`, so with auto height this div
+      // collapses to zero and the `fill` image inside it renders at nothing —
+      // which is why every caller used to have to pass `absolute inset-0`
+      // itself. Passed as `absolute inset-0`, those classes override this.
+      className={cn("hero-media relative h-full w-full overflow-hidden", className)}
     >
       {/*
         The media box is over-tall by the parallax range so the frame never
@@ -117,7 +129,11 @@ export function HeroMedia({
           mediaClassName,
         )}
       >
-        <Image alt={alt ?? ""} {...props} className="h-full w-full object-cover" />
+        <Image
+          alt={alt ?? ""}
+          {...props}
+          className={cn("h-full w-full object-cover", imageClassName)}
+        />
       </div>
       {children}
     </div>
