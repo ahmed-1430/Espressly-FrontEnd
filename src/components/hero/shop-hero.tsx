@@ -78,6 +78,10 @@ export function ShopHero() {
                   key={product.id}
                   className={cn(
                     "flex-1",
+                    // Three packs, each with a name and a price, overflow the
+                    // measure below 640px. The third is dropped at those widths
+                    // rather than letting the row set the page's scroll width.
+                    index === 2 && "hidden sm:block",
                     index === 0 && "lg:mb-10",
                     index === 2 && "lg:-mb-6",
                   )}
@@ -99,8 +103,8 @@ export function ShopHero() {
                         imageClassName="transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                       />
                     </div>
-                    <div className="mt-3 flex items-baseline justify-between gap-3">
-                      <span className="text-sm leading-snug text-foreground">
+                    <div className="mt-3 flex items-baseline justify-between gap-2">
+                      <span className="min-w-0 text-sm leading-snug text-foreground">
                         {product.name}
                       </span>
                       <span className="micro shrink-0 text-accent">

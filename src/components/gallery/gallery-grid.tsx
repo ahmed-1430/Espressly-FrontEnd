@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { galleryFrames, type GalleryFrame } from "@/data/gallery";
 import { CurtainReveal } from "@/components/motion/curtain-reveal";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
 import { GalleryViewer } from "./gallery-viewer";
 
@@ -74,6 +75,7 @@ function GalleryFrame_({
 
   return (
     <figure
+      data-parallax=""
       className={cn("group relative", widthFor(frame.span), className)}
     >
       <div
@@ -130,6 +132,53 @@ function GalleryFrame_({
 export function GalleryGrid() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  /*
+    Scroll-linked parallax.
+    
+    The curtain reveal is a one-shot entrance: it fires as a frame arrives and is
+    finished. That left the gallery with no motion that responded to scroll at
+    all, which an audit measuring transform deltas across a scroll reported as
+    imperceptible. A scrubbed drift restores the cinematic register without
+    adding a single element to the page.
+    
+    Restrained on purpose — 6%, well under the threshold where a photograph
+    visibly slides against its frame. The image is scaled to 1.08 first so the
+    drift never exposes an edge, and the whole thing is skipped under reduced
+    motion and below `lg`, where the frames are small and the drift would only
+    read as jitter.
+  */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    if (prefersReducedMotion()) return;
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+
+    const ctx = gsap.context(() => {
+      const figures = gsap.utils.toArray<HTMLElement>("[data-parallax]", root);
+      for (const figure of figures) {
+        const image = figure.querySelector("img");
+        if (!image) continue;
+        gsap.fromTo(
+          image,
+          { scale: 1.08, yPercent: -3 },
+          {
+            scale: 1.08,
+            yPercent: 3,
+            ease: "none",
+            scrollTrigger: {
+              trigger: figure,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+      }
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
 
   // Authored roles rather than a slice of the set. The data is ordered to match
   // this composition — featured frame, then a portrait/landscape pair, then a

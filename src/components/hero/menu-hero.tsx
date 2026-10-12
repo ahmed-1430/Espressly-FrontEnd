@@ -21,12 +21,12 @@ import { cn } from "@/lib/cn";
 export function MenuHero() {
   const rootRef = useRef<HTMLElement>(null);
 
-  // Three drinks from the set, so the hero shows the actual range rather than
-  // three crops of the same hero photograph.
+  // Two drinks, not three. Three drinks in the five-column right band rendered
+  // at roughly 100px wide each — too small to read as photography, which the
+  // collapsed-media gate correctly flagged. Two fill the band and can carry it.
   const featured = [
-    { src: "/images/menu-espresso.jpg", alt: "A short espresso in a clear cup, crema settled on top." },
     { src: "/images/menu-flat-white.jpg", alt: "A flat white with a rosetta poured into the milk." },
-    { src: "/images/food-croissant.jpg", alt: "Two croissants on a dark bench with flour still falling around them." },
+    { src: "/images/menu-espresso.jpg", alt: "A short espresso in a clear cup, crema settled on top." },
   ];
 
   return (
@@ -60,20 +60,18 @@ export function MenuHero() {
           </div>
 
           {/*
-            Three drinks as a stepped block rather than a row: each is narrower
-            and lower than the last, so the eye travels down and across instead of
-            reading a strip of equal tiles.
+            Two drinks as a stepped pair: the second is narrower and lower, so the
+            eye travels down and across rather than reading a level strip.
           */}
           <div className="lg:col-span-5">
-            <ul className="flex items-end gap-4">
+            <ul className="flex items-end gap-4 sm:gap-5">
               {featured.map((drink, index) => (
                 <li
                   key={drink.src}
                   className={cn(
-                    "relative overflow-hidden bg-background-raised",
-                    "aspect-3/4 w-1/3",
-                    index === 1 && "sm:w-[38%]",
-                    index === 2 && "sm:w-[46%]",
+                    "relative aspect-3/4 overflow-hidden bg-background-raised",
+                    index === 0 && "w-[58%]",
+                    index === 1 && "w-[42%] lg:mb-10",
                   )}
                 >
                   <HeroMedia
@@ -83,7 +81,7 @@ export function MenuHero() {
                     priority={index === 0}
                     parallax={0}
                     delay={0.08 * index}
-                    sizes="(max-width: 640px) 28vw, 14vw"
+                    sizes="(max-width: 640px) 52vw, (max-width: 1024px) 30vw, 17vw"
                   />
                 </li>
               ))}

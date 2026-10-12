@@ -4,6 +4,12 @@ import { useRef } from "react";
 import { SplitLines } from "@/components/motion/split-lines";
 import { galleryFrames } from "@/data/gallery";
 
+/** Spells a small count, so copy cannot drift from the set it describes. */
+const wordFor = (n: number) =>
+  ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][
+    n
+  ] ?? String(n);
+
 /**
  * GALLERY masthead — compact.
  *
@@ -44,7 +50,10 @@ export function GalleryHero() {
 
           <div className="max-w-sm lg:pb-3 lg:text-right">
             <p className="text-pretty text-[clamp(0.9375rem,1.2vw,1.0625rem)] leading-relaxed text-foreground-soft">
-              Nine photographs of the bar, the roast and the room.
+              {/* Spelled from the data, not typed. This said "nine" while the
+                  count beside it read 08, after a frame was cut. */}
+              {wordFor(galleryFrames.length)} photographs of the bar, the roast
+              and the room.
             </p>
 
             <dl className="mt-6 flex items-end gap-8 lg:justify-end">

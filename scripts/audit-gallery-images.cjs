@@ -153,6 +153,38 @@ if (spans.length === expected.length && spans.join() !== expected.join()) {
   failures++;
 }
 
+// 9. Copy that states the size of the set must agree with it. The masthead read
+//    "Nine photographs" beside a count of 08, because a frame was cut after the
+//    sentence was written. A number written into prose has to be checked.
+const hero = read("src/components/hero/gallery-hero.tsx");
+const spelled = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+];
+const heroBody = hero.replace(/\/\*[\s\S]*?\*\//g, "");
+const claimed = spelled.find((w) =>
+  new RegExp(`\\b${w}\\s+photographs`, "i").test(heroBody),
+);
+if (claimed) {
+  const actual = frameCount;
+  const actualWord = spelled[actual];
+  if (claimed !== actualWord) {
+    console.log(
+      `FAIL masthead says "${claimed} photographs" but the set has ${actual}`,
+    );
+    failures++;
+  }
+}
+
 console.log(`\nframes: ${frameCount}`);
 console.log(`distinct files: ${seen.size}`);
 console.log(`missing: ${missing}  repeated: ${dupes}  borrowed: ${borrowed}`);

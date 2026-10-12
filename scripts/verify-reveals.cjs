@@ -44,7 +44,11 @@ const routes = ["/", "/menu", "/shop", "/gallery", "/about", "/contact"];
         await new Promise((r) => setTimeout(r, 140));
       }
       window.scrollTo(0, 0);
-      await new Promise((r) => setTimeout(r, 400));
+      // Longer than SplitLines' own 2600ms safety net. Settling for less than
+      // that tested whether a reveal finished inside 400ms, which is not a
+      // guarantee anything makes, and produced an intermittent failure on /shop
+      // where the hero's mask was still parked.
+      await new Promise((r) => setTimeout(r, 3000));
     });
 
     const report = await page.evaluate(() => {
