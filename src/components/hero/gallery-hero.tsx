@@ -1,92 +1,70 @@
 "use client";
 
-import { useRef } from "react";
-import { SplitLines } from "@/components/motion/split-lines";
-import { galleryFrames } from "@/data/gallery";
+import { motion, useReducedMotion } from "motion/react";
 
-/** Spells a small count, so copy cannot drift from the set it describes. */
-const wordFor = (n: number) =>
-  ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][
-    n
-  ] ?? String(n);
-
-/**
- * GALLERY masthead — compact.
- *
- * The earlier hero was a full-bleed photograph at `100vw` with a 13rem title set
- * into it, three overlapping thumbnails, and a metadata rail: the same structure
- * every other inner page used, which is precisely what made the site read as one
- * template. It also spent the first viewport re-showing three frames the spreads
- * below showed again.
- *
- * This is a wall label instead. Type, a count, and the first frame immediately
- * below it — so the reader is looking at photography within the opening viewport,
- * without a full-height image standing between them and it.
- */
 export function GalleryHero() {
-  const rootRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <section
-      ref={rootRef}
       aria-labelledby="gallery-hero-title"
-      className="border-b border-border pt-16 lg:pt-[76px]"
+      className="border-b border-border/70 pt-24 sm:pt-28 lg:pt-32"
     >
-      <div className="mx-auto w-full max-w-[110rem] px-5 pb-12 pt-10 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-          <div>
-            <div className="flex items-center gap-4">
-              <span aria-hidden className="h-px w-8 bg-accent" />
-              <span className="eyebrow">Photography</span>
-            </div>
+      <div className="mx-auto flex w-full max-w-[110rem] items-end justify-between gap-6 px-5 pb-7 sm:px-8 sm:pb-9 lg:px-12 lg:pb-10">
+        <div>
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-3 flex items-center gap-3"
+          >
+            <span
+              aria-hidden="true"
+              className="h-px w-7 bg-accent sm:w-9"
+            />
 
-            <h1
-              id="gallery-hero-title"
-              className="mt-6 font-display text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.88] tracking-display"
+            <span className="eyebrow">Visual journal</span>
+          </motion.div>
+
+          <h1
+            id="gallery-hero-title"
+            className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.92] tracking-display"
+          >
+            <motion.span
+              className="inline-block"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.75,
+                delay: 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
-              <SplitLines lines={["Gallery"]} duration={1.1} />
-            </h1>
-          </div>
-
-          <div className="max-w-sm lg:pb-3 lg:text-right">
-            <p className="text-pretty text-[clamp(0.9375rem,1.2vw,1.0625rem)] leading-relaxed text-foreground-soft">
-              {/* Spelled from the data, not typed. This said "nine" while the
-                  count beside it read 08, after a frame was cut. */}
-              {wordFor(galleryFrames.length)} photographs of the bar, the roast
-              and the room.
-            </p>
-
-            <dl className="mt-6 flex items-end gap-8 lg:justify-end">
-              <div>
-                <dt className="micro text-muted-foreground">Frames</dt>
-                <dd className="mt-1 font-display text-2xl text-accent">
-                  {String(galleryFrames.length).padStart(2, "0")}
-                </dd>
-              </div>
-              <div>
-                <dt className="micro text-muted-foreground">Period</dt>
-                <dd className="mt-1 font-display text-2xl">2019—26</dd>
-              </div>
-              {/*
-                Kept as a real in-page link rather than a decorative scroll cue:
-                the masthead is compact, so there is little to scroll past, but a
-                keyboard user still wants a way to reach the photographs directly
-                and `verify:anchors` checks this resolves without a native jump.
-              */}
-              <div className="hidden sm:block">
-                <dt className="micro text-muted-foreground">&nbsp;</dt>
-                <dd className="mt-1">
-                  <a
-                    href="#frames"
-                    className="text-sm text-foreground underline decoration-accent/60 underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"
-                  >
-                    View the set
-                  </a>
-                </dd>
-              </div>
-            </dl>
-          </div>
+              Gallery
+              <span className="text-accent">.</span>
+            </motion.span>
+          </h1>
         </div>
+
+        <motion.a
+          href="#frames"
+          initial={prefersReducedMotion ? false : { opacity: 0, x: 12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{
+            duration: 0.55,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="group mb-1 hidden items-center gap-3 border-b border-border pb-2 text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:inline-flex"
+        >
+          Explore the collection
+          <span
+            aria-hidden="true"
+            className="text-accent transition-transform duration-300 group-hover:translate-x-1"
+          >
+            ↗
+          </span>
+        </motion.a>
       </div>
     </section>
   );
