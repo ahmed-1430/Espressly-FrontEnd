@@ -2,24 +2,15 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useCallback, useMemo, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Maximize2,
-} from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Maximize2 } from "lucide-react";
 
-import { galleryFrames, type GalleryFrame } from "@/data/gallery";
+import { galleryFrames } from "@/data/gallery";
 import { GalleryViewer } from "./gallery-viewer";
 
 type TransitionMode = "Wipe" | "Blinds" | "Iris" | "Pixels" | "Doors";
 
-type IndexedFrame = {
-  frame: GalleryFrame;
-  originalIndex: number;
-};
-
-const transitionModes: TransitionMode[] = [
+const modes: TransitionMode[] = [
   "Wipe",
   "Blinds",
   "Iris",
@@ -27,58 +18,59 @@ const transitionModes: TransitionMode[] = [
   "Doors",
 ];
 
-const CURTAIN_COLOR = "#e9e3d8";
+const curtainColor = "#e9e3d8";
 
-function CurtainTransition({
+function Curtain({
   mode,
-  transitionKey,
+  onComplete,
   reducedMotion,
 }: {
   mode: TransitionMode;
-  transitionKey: string;
+  onComplete: () => void;
   reducedMotion: boolean;
 }) {
+  useEffect(() => {
+    if (reducedMotion) onComplete();
+  }, [reducedMotion, onComplete]);
+
   if (reducedMotion) return null;
+
+  const common = {
+    initial: { scaleX: 1 },
+    animate: { scaleX: 0 },
+    transition: {
+      duration: 0.8,
+      ease: [0.76, 0, 0.24, 1] as [number, number, number, number],
+    },
+    onAnimationComplete: onComplete,
+  };
 
   if (mode === "Wipe") {
     return (
       <motion.div
-        key={transitionKey}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10"
-        style={{
-          backgroundColor: CURTAIN_COLOR,
-          transformOrigin: "left",
-        }}
-        initial={{ scaleX: 1 }}
-        animate={{ scaleX: 0 }}
-        transition={{
-          duration: 0.85,
-          ease: [0.76, 0, 0.24, 1],
-        }}
+        className="absolute inset-0 z-10 origin-left"
+        style={{ backgroundColor: curtainColor }}
+        {...common}
       />
     );
   }
 
   if (mode === "Blinds") {
     return (
-      <div
-        key={transitionKey}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 flex"
-      >
+      <div className="absolute inset-0 z-10 flex">
         {Array.from({ length: 8 }, (_, index) => (
           <motion.div
             key={index}
-            className="h-full flex-1"
-            style={{ backgroundColor: CURTAIN_COLOR }}
+            className="h-full flex-1 origin-top"
+            style={{ backgroundColor: curtainColor }}
             initial={{ scaleY: 1 }}
             animate={{ scaleY: 0 }}
             transition={{
               duration: 0.65,
-              delay: index * 0.045,
+              delay: index * 0.04,
               ease: [0.76, 0, 0.24, 1],
             }}
+            onAnimationComplete={index === 7 ? onComplete : undefined}
           />
         ))}
       </div>
@@ -88,71 +80,56 @@ function CurtainTransition({
   if (mode === "Iris") {
     return (
       <motion.div
-        key={transitionKey}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10"
-        style={{ backgroundColor: CURTAIN_COLOR }}
+        className="absolute inset-0 z-10"
+        style={{ backgroundColor: curtainColor }}
         initial={{ clipPath: "circle(0% at 50% 50%)" }}
         animate={{ clipPath: "circle(75% at 50% 50%)" }}
         transition={{
-          duration: 0.9,
+          duration: 0.85,
           ease: [0.76, 0, 0.24, 1],
         }}
+        onAnimationComplete={onComplete}
       />
     );
   }
 
   if (mode === "Doors") {
     return (
-      <div
-        key={transitionKey}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 flex"
-      >
-        <motion.div
-          className="h-full w-1/2"
-          style={{ backgroundColor: CURTAIN_COLOR }}
-          initial={{ scaleX: 1 }}
-          animate={{ scaleX: 0 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.76, 0, 0.24, 1],
-          }}
-        />
-
-        <motion.div
-          className="h-full w-1/2"
-          style={{ backgroundColor: CURTAIN_COLOR }}
-          initial={{ scaleX: 1 }}
-          animate={{ scaleX: 0 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.76, 0, 0.24, 1],
-          }}
-        />
+      <div className="absolute inset-0 z-10 flex">
+        {[0, 1].map((side) => (
+          <motion.div
+            key={side}
+            className={`h-full w-1/2 ${
+              side === 0 ? "origin-left" : "origin-right"
+            }`}
+            style={{ backgroundColor: curtainColor }}
+            initial={{ scaleX: 1 }}
+            animate={{ scaleX: 0 }}
+            transition={{
+              duration: 0.8,
+              ease: [0.76, 0, 0.24, 1],
+            }}
+            onAnimationComplete={side === 1 ? onComplete : undefined}
+          />
+        ))}
       </div>
     );
   }
 
-  // Pixels: a compact staggered reveal using a grid of curtain tiles.
   return (
-    <div
-      key={transitionKey}
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-10 grid grid-cols-8 grid-rows-6"
-    >
+    <div className="absolute inset-0 z-10 grid grid-cols-8 grid-rows-6">
       {Array.from({ length: 48 }, (_, index) => (
         <motion.div
           key={index}
-          style={{ backgroundColor: CURTAIN_COLOR }}
-          initial={{ scale: 1, opacity: 1 }}
-          animate={{ scale: 0, opacity: 0 }}
+          style={{ backgroundColor: curtainColor }}
+          initial={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 0, scale: 0 }}
           transition={{
             duration: 0.35,
-            delay:
-              ((index % 8) + Math.floor(index / 8)) * 0.025,
+            delay: ((index % 8) + Math.floor(index / 8)) * 0.02,
             ease: "easeInOut",
           }}
+          onAnimationComplete={index === 47 ? onComplete : undefined}
         />
       ))}
     </div>
@@ -160,29 +137,25 @@ function CurtainTransition({
 }
 
 export function GalleryGrid() {
-  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotion();
 
-  const frames = useMemo<IndexedFrame[]>(() => {
+  const frames = useMemo(() => {
     const seen = new Set<string>();
 
-    return galleryFrames.reduce<IndexedFrame[]>(
-      (result, frame, originalIndex) => {
-        const src = frame.src?.trim();
+    return galleryFrames.filter((frame) => {
+      const src = frame.src.trim();
+      if (!src || seen.has(src)) return false;
 
-        if (!src || seen.has(src)) return result;
-
-        seen.add(src);
-        result.push({ frame, originalIndex });
-
-        return result;
-      },
-      [],
-    );
+      seen.add(src);
+      return true;
+    });
   }, []);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [mode, setMode] = useState<TransitionMode>("Wipe");
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  const [transitionId, setTransitionId] = useState(0);
+  const [curtainVisible, setCurtainVisible] = useState(false);
 
   const active = frames[activeIndex];
   const total = frames.length;
@@ -191,37 +164,44 @@ export function GalleryGrid() {
     (direction: number) => {
       if (total < 2) return;
 
-      setActiveIndex((current) => (current + direction + total) % total);
+      setCurtainVisible(true);
+      setTransitionId((id) => id + 1);
+      setActiveIndex((index) => (index + direction + total) % total);
     },
     [total],
   );
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (viewerIndex !== null || total < 2) return;
+
+      if (event.key === "ArrowRight") changeSlide(1);
+      if (event.key === "ArrowLeft") changeSlide(-1);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [changeSlide, total, viewerIndex]);
+
   const openViewer = useCallback(() => {
-    if (active) {
-      setViewerIndex(active.originalIndex);
-    }
-  }, [active]);
+    setViewerIndex(activeIndex);
+  }, [activeIndex]);
 
   const stepViewer = useCallback(
     (direction: number) => {
-      if (total < 2) return;
-
-      const current = frames.findIndex(
-        (item) => item.originalIndex === viewerIndex,
-      );
-
-      const next = (current + direction + total) % total;
-
-      setViewerIndex(frames[next].originalIndex);
+      setViewerIndex((index) => {
+        if (index === null || total < 1) return index;
+        return (index + direction + total) % total;
+      });
     },
-    [frames, total, viewerIndex],
+    [total],
   );
 
   if (!active) {
     return (
-      <div className="flex min-h-48 items-center justify-center border border-border text-sm text-muted-foreground">
+      <p className="border border-border p-8 text-sm text-muted-foreground">
         Gallery photography is currently unavailable.
-      </div>
+      </p>
     );
   }
 
@@ -230,7 +210,7 @@ export function GalleryGrid() {
       <div className="mx-auto w-full max-w-[1000px]">
         <div className="mb-4 flex items-center justify-between gap-4">
           <p className="micro uppercase tracking-[0.2em] text-muted-foreground">
-            <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
+            <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent" />
             Live · Curtains
           </p>
 
@@ -241,28 +221,20 @@ export function GalleryGrid() {
           </p>
         </div>
 
-        <div className="grid overflow-hidden border border-border bg-background lg:min-h-[470px] lg:grid-cols-[1.05fr_0.95fr]">
-          {/* Featured photograph */}
-          <div className="relative aspect-[4/3] overflow-hidden bg-background-raised sm:aspect-[16/10] lg:aspect-auto lg:min-h-[470px]">
-            <AnimatePresence initial={false} mode="sync">
+        <div className="grid overflow-hidden border border-border lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative aspect-[4/3] overflow-hidden bg-[#e9e3d8] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px]">
+            <AnimatePresence initial={false} mode="wait">
               <motion.div
-                key={active.frame.src}
+                key={active.src}
                 className="absolute inset-0"
-                initial={
-                  prefersReducedMotion
-                    ? false
-                    : { opacity: 0.8, scale: 1.025 }
-                }
+                initial={reducedMotion ? false : { opacity: 0.75, scale: 1.025 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  duration: prefersReducedMotion ? 0 : 0.45,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                exit={{ opacity: 0.5 }}
+                transition={{ duration: reducedMotion ? 0 : 0.45 }}
               >
                 <Image
-                  src={active.frame.src}
-                  alt={active.frame.alt}
+                  src={active.src}
+                  alt={active.alt}
                   fill
                   priority={activeIndex === 0}
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -271,16 +243,19 @@ export function GalleryGrid() {
               </motion.div>
             </AnimatePresence>
 
-            <CurtainTransition
-              mode={mode}
-              transitionKey={`${active.frame.src}-${activeIndex}-${mode}`}
-              reducedMotion={Boolean(prefersReducedMotion)}
-            />
+            {curtainVisible && (
+              <Curtain
+                key={transitionId}
+                mode={mode}
+                reducedMotion={Boolean(reducedMotion)}
+                onComplete={() => setCurtainVisible(false)}
+              />
+            )}
 
             <button
               type="button"
               onClick={openViewer}
-              aria-label={`View full image: ${active.frame.caption}`}
+              aria-label={`View full image: ${active.caption}`}
               className="absolute inset-0 z-20 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
             >
               <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center border border-white/50 bg-black/25 text-white backdrop-blur-sm transition-colors hover:bg-black/50">
@@ -289,38 +264,28 @@ export function GalleryGrid() {
             </button>
           </div>
 
-          {/* Editorial information */}
-          <div className="flex min-h-[250px] flex-col justify-between p-6 sm:p-9 lg:min-h-0 lg:p-10 xl:p-12">
-            <div>
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={active.frame.src}
-                  initial={
-                    prefersReducedMotion
-                      ? false
-                      : { opacity: 0, y: 14 }
-                  }
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0 : 0.35,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                >
-                  <p className="mb-5 font-mono text-xs tracking-[0.15em] text-muted-foreground">
-                    FRAME {String(activeIndex + 1).padStart(2, "0")}
-                  </p>
+          <div className="flex min-h-[250px] flex-col justify-between p-6 sm:p-9 lg:min-h-0 lg:p-10">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={active.id}
+                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: reducedMotion ? 0 : 0.35 }}
+              >
+                <p className="mb-5 font-mono text-xs tracking-[0.15em] text-muted-foreground">
+                  FRAME {String(activeIndex + 1).padStart(2, "0")}
+                </p>
 
-                  <h2 className="max-w-md font-display text-3xl leading-[1.05] tracking-display sm:text-4xl lg:text-5xl">
-                    {active.frame.caption}
-                  </h2>
+                <h2 className="max-w-md font-display text-3xl leading-[1.05] tracking-display sm:text-4xl lg:text-5xl">
+                  {active.caption}
+                </h2>
 
-                  <p className="mt-4 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                    {active.frame.meta}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                <p className="mt-4 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  {active.meta}
+                </p>
+              </motion.div>
+            </AnimatePresence>
 
             <div className="mt-10 flex items-center justify-between gap-4">
               <button
@@ -350,50 +315,43 @@ export function GalleryGrid() {
           </div>
         </div>
 
-        {/* Transition controls */}
         <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5 border border-border/70 p-1.5 sm:mt-7 sm:inline-flex sm:relative sm:left-1/2 sm:-translate-x-1/2">
-          {transitionModes.map((item) => {
-            const selected = mode === item;
-
-            return (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setMode(item)}
-                aria-pressed={selected}
-                className={[
-                  "px-3 py-2.5 text-xs transition-colors duration-200 sm:px-4",
-                  selected
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground",
-                ].join(" ")}
-              >
-                {item}
-              </button>
-            );
-          })}
+          {modes.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setMode(item)}
+              aria-pressed={mode === item}
+              className={`px-3 py-2.5 text-xs transition-colors sm:px-4 ${
+                mode === item
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
         </div>
 
-        {/* Direct slide selection */}
         {total > 1 && (
-          <div
-            className="mt-6 flex justify-center gap-2"
-            role="group"
-            aria-label="Choose photograph"
-          >
-            {frames.map((item, index) => (
+          <div className="mt-6 flex justify-center gap-2" role="group" aria-label="Choose photograph">
+            {frames.map((frame, index) => (
               <button
-                key={item.frame.src}
+                key={frame.id}
                 type="button"
-                onClick={() => setActiveIndex(index)}
+                onClick={() => {
+                  if (index === activeIndex) return;
+                  setCurtainVisible(true);
+                  setTransitionId((id) => id + 1);
+                  setActiveIndex(index);
+                }}
                 aria-label={`Show photograph ${index + 1}`}
                 aria-current={activeIndex === index ? "true" : undefined}
-                className={[
-                  "h-1 transition-all duration-300",
+                className={`h-1 transition-all duration-300 ${
                   activeIndex === index
                     ? "w-8 bg-foreground"
-                    : "w-3 bg-border hover:bg-muted-foreground",
-                ].join(" ")}
+                    : "w-3 bg-border hover:bg-muted-foreground"
+                }`}
               />
             ))}
           </div>
